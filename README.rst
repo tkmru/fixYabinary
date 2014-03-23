@@ -24,8 +24,7 @@ The recommended process is to install the PyPI package, as it allows easily stay
 -------
 Archive
 -------
-Download an archive from https://github.com/tkmru/fixYabinary/releases on github.
-
+Download from https://github.com/tkmru/fixYabinary/.
 
 
 
