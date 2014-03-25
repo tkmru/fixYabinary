@@ -12,7 +12,7 @@ setup(
     version = __version__,
     author = __author__,
     author_email = "i.am.tkmru@gmail.com",
-    scripts = ["fixYabinary.py"],
+    py_modules = ['fixYabinary'],
     url = "https://github.com/tkmru/fixYabinary",
     license = "MIT License",
     keywords = ["binary", "ctf"],

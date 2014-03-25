@@ -35,7 +35,7 @@ Usage
 look(file_path)
 ---------------
 
-print Binary like Binary editer.
+print Binary like hexdump command.
 
 ::
 

@@ -10,10 +10,10 @@ Use at your own risk.
 Released under MIT License.
 """
 
-__description__ = 'Tool to Fix Yabinary File'
-__author__ = '@tkmru'
-__version__ = '0.1.0'
-__date__ = '2014/03/23'
+__description__ = "Tool to Fix Yabinary File"
+__author__ = "@tkmru"
+__version__ = "0.1.1"
+__date__ = "2014/03/25"
 __copyright__ = "Copyright (c) @tkmru"
 __license__ = "MIT License"
 
@@ -59,7 +59,7 @@ def get(file_path, option=None):
                 return hex_data
 
             elif option == "f":
-                return re.sub('(..)', r'\1 ', hex_data)[:-1]
+                return re.sub("(..)", r"\1 ", hex_data)[:-1]
 
     except IOError:
         raise Exception("First arg is wrong path.")
@@ -73,7 +73,7 @@ def look(file_path):
     look Binary like Binary editer
     """
     hex_data_formated = get(file_path, "f")
-    hex_list = hex_data_formated.split(' ')
+    hex_list = hex_data_formated.split(" ")
 
     result = "           00 01 02 03 04 05 06 07   08 09 0A 0B 0C 0D 0E 0F\n"
     for index, value in enumerate(hex_list):
@@ -152,7 +152,7 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
         """
         cut out file
         """
-        hex_list = hex_data_formated.split(' ')
+        hex_list = hex_data_formated.split(" ")
         if type(start_address) == str: # hex to int
             start_address = int(start_address, 16)
 
@@ -177,8 +177,8 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
                             result_list.append((hex_data_formated_cut[ : end_index].replace(" ",""), key))
                             break
 
-                else: # footer don't match
-                    hex_list = hex_data_formated.split(' ')
+                else: # footer don"t match
+                    hex_list = hex_data_formated.split(" ")
                     element = _extractElementAppearManyTimes(hex_list)
 
                     for _ in range(len(hex_list)):
@@ -190,8 +190,8 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
 
                     result_list.append(("".join(hex_list), key))
 
-        else: # when Yabinary don't have header. 
-            hex_list = hex_data_formated.split(' ')
+        else: # when Yabinary don"t have header. 
+            hex_list = hex_data_formated.split(" ")
             element = _extractElementAppearManyTimes(hex_list)
             
             for _ in range(len(hex_list)):
@@ -225,13 +225,13 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
                 new_file_path += str(index + 1)
 
             if file_type is None:
-                with open(new_file_path, 'wb') as f:
+                with open(new_file_path, "wb") as f:
                     f.write(result.decode("hex"))
                 print "Succeeded in making " + new_file_path
 
             else:
                 new_file_path = new_file_path + "." + file_type
-                with open(new_file_path, 'wb') as f:
+                with open(new_file_path, "wb") as f:
                     f.write(result.decode("hex"))
                 print "Succeeded in making " + new_file_path
 
