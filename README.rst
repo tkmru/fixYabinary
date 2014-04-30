@@ -2,7 +2,7 @@
 fixYabinary
 ===========
 
-This is Python Library to Fix Yabinary File.
+This is Python Library to Fix Yabinary File like foremost.
 
 The term "Yabinary" in Japanese mean "Dangerous Binary".
 

@@ -20,7 +20,8 @@ setup(
     long_description = readme_file,
     classifiers = [
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2 :: Only",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
         "License :: OSI Approved :: MIT License"
         ]

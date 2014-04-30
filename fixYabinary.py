@@ -12,15 +12,19 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.1.1"
-__date__ = "2014/03/25"
+__version__ = "0.1.2"
+__date__ = "2014/04/30"
+__minimum_python_version__ = (2, 7, 6)
+__maximum_python_version__ = (3, 4, 0)
 __copyright__ = "Copyright (c) @tkmru"
 __license__ = "MIT License"
 
 
 import re
+import binascii
+import sys
 
-headers = { "jpg": ["ff d8 ff"],
+headers = { "jpg" : ["ff d8 ff"],
             "png" : ["89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52"],
             "pdf" : ["25 50 44 46"],            
             "zip" : ["50 4b 03 04",
@@ -53,7 +57,7 @@ def get(file_path, option=None):
     """
     try:
         with open(file_path, "rb") as f:
-            hex_data = f.read().encode("hex")
+            hex_data = binascii.hexlify(f.read()).decode('utf-8')
 
             if option is None:
                 return hex_data
@@ -65,7 +69,7 @@ def get(file_path, option=None):
         raise Exception("First arg is wrong path.")
 
     except:
-        raise Exception( "option must be \"f\" or None")
+        raise Exception("option must be \"f\" or None")
 
 
 def look(file_path):
@@ -90,7 +94,7 @@ def look(file_path):
         else:
             result += (value + " ")
 
-    print result
+    print(result)
 
 
 def _extractElementAppearManyTimes(list):
@@ -226,14 +230,18 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
 
             if file_type is None:
                 with open(new_file_path, "wb") as f:
-                    f.write(result.decode("hex"))
-                print "Succeeded in making " + new_file_path
+                    f.write(bytes.fromhex(result))
+                print("Succeeded in making " + new_file_path)
 
             else:
                 new_file_path = new_file_path + "." + file_type
+
                 with open(new_file_path, "wb") as f:
-                    f.write(result.decode("hex"))
-                print "Succeeded in making " + new_file_path
+                    if sys.version_info[0] >= 3:
+                        f.write(bytes.fromhex(result))
+                    else:
+                        f.write(result.decode("hex"))
+                print("Succeeded in making " + new_file_path)
 
     except IOError:
         raise Exception( "Second arg is wrong path.")
@@ -256,7 +264,7 @@ def identify(file_path):
     for index, key in indexies:
         result += key + "\n"
 
-    print result
+    print(result)
 
 
 def extend(file_path, new_file_path, top_hex, top_bytes, bottom_hex="00", bottom_bytes=0):
@@ -267,7 +275,7 @@ def extend(file_path, new_file_path, top_hex, top_bytes, bottom_hex="00", bottom
         hex_data = get(file_path)
 
     except IOError:
-        raise Exception( "First arg is wrong path." )
+        raise Exception("First arg is wrong path.")
 
 
     if len(top_hex) == 1:
@@ -289,16 +297,22 @@ def extend(file_path, new_file_path, top_hex, top_bytes, bottom_hex="00", bottom
 
     try:
         with open(new_file_path, "wb") as f:
-            f.write(new_hex_data.decode("hex"))
-            print "Succeeded in making " + new_file_path
+            if sys.version_info[0] >= 3:
+                f.write(bytes.fromhex(new_hex_data))
+            else:
+                f.write(new_hex_data.decode("hex"))
+
+        print("Succeeded in making " + new_file_path)
 
     except IOError:
         raise Exception( "Second arg is wrong path." )
+
 """
 if __name__ == "__main__":
-    #print identify("./test.png")
-    #print extract("./expanded", "./output")
-    #print extend("./test.ppg", "./expanded", "00", 10, "00", 10)
-    #print look("./test.png")
-    #print get("./test.png")
+    #identify("./test.jpg")
+    #extract("./expanded", "./output")
+    #extend("./test.jpg", "./expanded", "00", 10, "00", 10)
+    #look("./test.jpg")
+    #print(get("./test.jpg"))
+    #print(get("./test.jpg", "f"))
 """
