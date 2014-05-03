@@ -12,8 +12,8 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.1.2"
-__date__ = "2014/04/30"
+__version__ = "0.1.3"
+__date__ = "2014/05/04"
 __minimum_python_version__ = (2, 7, 6)
 __maximum_python_version__ = (3, 4, 0)
 __copyright__ = "Copyright (c) @tkmru"
@@ -230,7 +230,10 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
 
             if file_type is None:
                 with open(new_file_path, "wb") as f:
-                    f.write(bytes.fromhex(result))
+                    if sys.version_info[0] >= 3:
+                        f.write(bytes.fromhex(result))
+                    else:
+                        f.write(result.decode("hex"))
                 print("Succeeded in making " + new_file_path)
 
             else:
