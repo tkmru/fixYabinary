@@ -2,11 +2,11 @@
 fixYabinary
 ===========
 
-This is Python Library to Fix Yabinary File like foremost.
+This is Python Library to fix "Yabinary" file like foremost.
 
 The term "Yabinary" in Japanese mean "Dangerous Binary".
 
-This library can be useful for CTF.
+This library can be useful for CTF. It supports Python 2 & 3.
 
 
 Installation
@@ -21,11 +21,11 @@ The recommended process is to install the PyPI package, as it allows easily stay
 
     $ pip install fixYabinary
 
--------
-Archive
--------
+------
+github
+------
 Download from https://github.com/tkmru/fixYabinary/.
-
+Let's push star!!
 
 
 Usage
