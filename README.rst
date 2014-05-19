@@ -3,10 +3,11 @@ fixYabinary
 ===========
 
 This is Python Library to fix "Yabinary" file like foremost.
-
 The term "Yabinary" in Japanese mean "Dangerous Binary".
-
 This library can be useful for CTF. It supports Python 2 & 3.
+
+docment in Japanese(http://tkmr.hatenablog.com/entry/2014/03/25/222207)
+
 
 
 Installation
@@ -40,10 +41,17 @@ print Binary like hexdump command.
 ::
 
     >> import fixYabinary
-    >> fixYabinary.look("./test,png")
+    >> fixYabinary.look("./test.png")
 
                00 01 02 03 04 05 06 07   08 09 0A 0B 0C 0D 0E 0F
-    0x000000   00 00 00 00 49 45 4e 44 ae 42....
+    0x000000   00 00 00 00 49 45 4e 44   ae 42....
+
+
+It can be used in command line.
+
+::
+
+    $ fixYabinary -l test.png
 
 
 ----------------------
@@ -62,6 +70,7 @@ You must not set option.
     >>fixYabinary.get("./test.png", "f")
     00 00 00 00 49 45 4e 44 ae 42....
 
+
 ------------------------------------------------------------------------------
 extend(file_path, new_file_path, top_hex, top_bytes, bottom_hex, bottom_bytes)
 ------------------------------------------------------------------------------
@@ -78,6 +87,14 @@ If top_byte and bottom_byte is int, they are decimal.
     Succeeded in making ./extended
     # 000000 + ./test.png's Binary Data + 000000 in ./extended  
 
+
+It can be used in command line.
+
+::
+
+    $ fixYabinary -e test.png extended 00 3 00 3
+
+
 -------------------
 identify(file_path)
 -------------------
@@ -89,6 +106,14 @@ identify file type in file. return file type.
     >> import fixYabinary
     >> fixYabinary.get("./extended")
     png
+
+
+It can be used in command line.
+
+::
+
+    $ fixYabinary -i extended
+
 
 -------------------------------------------------------------
 extract(file_path, new_file_path, start_address, end_address)
@@ -113,6 +138,14 @@ and auto detect file in file, and write it into new file.
     Succeeded in making ./result.png
 
 
+It can be used in command line.
+
+::
+
+    $ fixYabinary -r extended result 4 124  # set start_address and end_address
+
+    $ fixYabinary -a extended result        # auto extract file in file
+    
 
 
 License
