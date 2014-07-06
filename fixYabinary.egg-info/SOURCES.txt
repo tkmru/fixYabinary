@@ -1,0 +1,9 @@
+MANIFEST.in
+README.rst
+fixYabinary.py
+setup.py
+fixYabinary.egg-info/PKG-INFO
+fixYabinary.egg-info/SOURCES.txt
+fixYabinary.egg-info/dependency_links.txt
+fixYabinary.egg-info/top_level.txt
+scripts/fixYabinary

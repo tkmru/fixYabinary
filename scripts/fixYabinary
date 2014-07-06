@@ -12,10 +12,10 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.2.0"
-__date__ = "2014/05/04"
+__version__ = "0.2.1"
+__date__ = "2014/07/07"
 __minimum_python_version__ = (2, 7, 6)
-__maximum_python_version__ = (3, 4, 0)
+__maximum_python_version__ = (3, 4, 1)
 __copyright__ = "Copyright (c) @tkmru"
 __license__ = "MIT License"
 
@@ -44,7 +44,7 @@ headers = { "jpg" : ["ff d8 ff"],
             "exe" : ["4D 5A 90 00 03 00 00 00"]
           }
 
-footers = { "jpg": ["ff d9"],
+footers = { "jpg" : ["ff d9"],
             "png" : ["00 00 00 00 49 45 4e 44 ae 42 60 82"],
             "pdf" : ["0a 25 25 45 4f 46",
                      "0a 25 25 45 4f 46 0a",
@@ -53,12 +53,12 @@ footers = { "jpg": ["ff d9"],
           }
 
 
-def get(file_path, option=None):
+def get(source_path, option=None):
     """
     get Binary data. If option is \"f\" , you get Formated Binary. 
     """
     try:
-        with open(file_path, "rb") as f:
+        with open(source_path, "rb") as f:
             hex_data = binascii.hexlify(f.read()).decode('utf-8')
 
             if option is None:
@@ -68,17 +68,17 @@ def get(file_path, option=None):
                 return re.sub("(..)", r"\1 ", hex_data)[:-1]
 
     except IOError:
-        raise Exception("First arg is wrong path.")
+        raise Exception("Source path is wrong.")
 
     except:
         raise Exception("option must be \"f\" or None")
 
 
-def look(file_path):
+def look(source_path):
     """
-    look Binary like Binary editer
+    look Binary like hexdump
     """
-    hex_data_formated = get(file_path, "f")
+    hex_data_formated = get(source_path, "f")
     hex_list = hex_data_formated.split(" ")
 
     result = "           00 01 02 03 04 05 06 07   08 09 0A 0B 0C 0D 0E 0F\n"
@@ -142,15 +142,12 @@ def _findDataBeforeNextHeaderOrLast(data):
     return results
 
 
-def extract(file_path, new_file_path, start_address=None, end_address=None):
+def extract(source_path, dest_path, start_address=None, end_address=None):
     """
     extract file in file. cut out file or auto detect file in file. 
     """
-    try:
-        hex_data_formated = get(file_path, "f")
 
-    except IOError:
-        raise Exception( "First arg is wrong path." )
+    hex_data_formated = get(source_path, "f")
 
     result_list = []
 
@@ -159,10 +156,11 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
         cut out file
         """
         hex_list = hex_data_formated.split(" ")
-        if type(start_address) == str: # hex to int
+        # if address is int, it interpret address is decimal
+        if type(start_address) == str: # address to int 
             start_address = int(start_address, 16)
 
-        if type(end_address) == str: # hex to int
+        if type(end_address) == str: # address to int 
             end_address = int(end_address, 16)
 
         result = "".join(hex_list[start_address : end_address + 1])
@@ -183,7 +181,7 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
                             result_list.append((hex_data_formated_cut[ : end_index].replace(" ",""), key))
                             break
 
-                else: # footer don"t match
+                else: # footer don't match
                     hex_list = hex_data_formated.split(" ")
                     element = _extractElementAppearManyTimes(hex_list)
 
@@ -196,7 +194,7 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
 
                     result_list.append(("".join(hex_list), key))
 
-        else: # when Yabinary don"t have header. 
+        else: # when Yabinary don't have header. 
             hex_list = hex_data_formated.split(" ")
             element = _extractElementAppearManyTimes(hex_list)
             
@@ -220,106 +218,87 @@ def extract(file_path, new_file_path, start_address=None, end_address=None):
             result_list.append(("".join(hex_list), None))
 
     else:
-        raise Exception("Both second and third args must be None or address.")
+        raise Exception("Both third and fourth args must be None or address.")
 
-    try:
-        for index, result_tuple in enumerate(result_list):
-            result, file_type = result_tuple[0], result_tuple[1]
-            if index == 0:
-                pass
-            else:
-                new_file_path += str(index + 1)
+    for index, result_tuple in enumerate(result_list):
+        result, file_type = result_tuple[0], result_tuple[1]
+        if index == 0:
+            pass
+        else:
+            dest_path += str(index + 1)
 
-            if file_type is None:
-                with open(new_file_path, "wb") as f:
-                    if sys.version_info[0] >= 3:
-                        f.write(bytes.fromhex(result))
-                    else:
-                        f.write(result.decode("hex"))
-                print("Succeeded in making " + new_file_path)
+        if file_type is None:
+            with open(dest_path, "wb") as f:
+                if sys.version_info[0] >= 3:
+                    f.write(bytes.fromhex(result))
+                else:
+                    f.write(result.decode("hex"))
+            print("Succeeded in making " + dest_path)
 
-            else:
-                new_file_path = new_file_path + "." + file_type
+        else:
+            dest_path = dest_path + "." + file_type
 
-                with open(new_file_path, "wb") as f:
-                    if sys.version_info[0] >= 3:
-                        f.write(bytes.fromhex(result))
-                    else:
-                        f.write(result.decode("hex"))
-                print("Succeeded in making " + new_file_path)
+            with open(dest_path, "wb") as f:
+                if sys.version_info[0] >= 3:
+                    f.write(bytes.fromhex(result))
+                else:
+                    f.write(result.decode("hex"))
 
-    except IOError:
-        raise Exception( "Second arg is wrong path.")
+            print("Succeeded in making " + dest_path)
 
 
-def identify(file_path):
+def identify(source_path):
     """
     identify file type in file
     """
-    hex_data_formated = get(file_path, "f")
+    hex_data_formated = get(source_path, "f")
     indexies = []
 
     for key in headers.keys():
         for element in headers[key]:
-            indexies += [(m.start(), key) for m in re.finditer(element, hex_data_formated)]
+            indexies += [key for m in re.finditer(element, hex_data_formated)]
 
-    indexies = sorted(indexies)
-    result = ""
-
-    for index, key in indexies:
-        result += key + "\n"
-
-    print(result)
+    print(source_path + " include following file")
+    for key in indexies: # tuple in indexies
+        print(key)
 
 
-def extend(file_path, new_file_path, top_hex, top_bytes, bottom_hex="00", bottom_bytes=0):
+def extend(source_path, dest_path, hex, bytes, option=None):
     """
-    make new file that is extended file
+    make new file extended old file
     """
-    try:
-        hex_data = get(file_path)
 
-    except IOError:
-        raise Exception("First arg is wrong path.")
+    hex_data = get(source_path)
 
+    if option is None:
+        new_hex_data = str(hex) * int(bytes) + hex_data + str(hex) * int(bytes)     
 
-    if len(top_hex) == 1:
-        top_hex = "0" + top_hex
+    elif option == 't':
+        new_hex_data = str(hex) * int(bytes) + hex_data     
 
-    if len(bottom_hex) == 1:
-        top_hex = "0" + top_hex
-
+    elif option == 'b':
+        new_hex_data = hex_data + str(hex) * int(bytes)          
 
     try:
-        new_hex_data = str(top_hex) * int(top_bytes) + hex_data + str(bottom_hex) * int(bottom_bytes)
-
-    except TypeError:
-        if type(top_bytes) == str: # hex to int
-            start_address = int(start_address, 16)
-
-        if type(bottom_bytes) == str: # hex to int
-            end_address = int(end_address, 16)        
-
-    try:
-        with open(new_file_path, "wb") as f:
+        with open(dest_path, "wb") as f:
             if sys.version_info[0] >= 3:
                 f.write(bytes.fromhex(new_hex_data))
             else:
                 f.write(new_hex_data.decode("hex"))
 
-        print("Succeeded in making " + new_file_path)
+        print("Succeeded in making " + dest_path)
 
     except IOError:
-        raise Exception( "Second arg is wrong path." )
+        raise Exception("Dest path is wrong.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(__description__)
-    parser.add_argument('-l', '--look', nargs=1, metavar='file_path', help='look binary like hexdump command.')
-    parser.add_argument('-i', '--identify', nargs=1, metavar='file_path', help='identify file type in file.')
-    parser.add_argument('-e', '--extend', nargs=6, metavar=('file_path', 'new_file_path', 'top_hex', 'top_bytes', 'bottom_hex', 'bottom_bytes'), help='make new file that file is extended.')
-    parser.add_argument('-r', '--extract', nargs=4, metavar=('file_path', 'new_file_path', 'start_address', 'end_address'), help='extract file in file.')
-    parser.add_argument('-a', '--auto_extract', nargs=2, metavar=('file_path', 'new_file_path'), help='auto extract file in file.')
+    parser.add_argument('-l', '--look', nargs=1, metavar='source_path', help='look binary like hexdump command.')
+    parser.add_argument('-i', '--identify', nargs=1, metavar='source_path', help='identify file type in file.')
+    parser.add_argument('-e', '--extend', nargs=4, metavar=('source_path', 'dest_path', 'hex', bytes), help='make new file that file is extended.')
+    parser.add_argument('-r', '--extract', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='extract file in file.')
+    parser.add_argument('-a', '--auto_extract', nargs=2, metavar=('source_path', 'dest_path'), help='auto extract file in file.')
     parser.add_argument('--version', '-v', action='version', version=__version__)
 
     args = parser.parse_args()
@@ -335,9 +314,9 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    #identify("./test.jpg")
+    identify("./test.jpg")
     #extract("./expanded", "./output")
-    #extend("./test.jpg", "./expanded", "00", 10, "00", 10)
-    #look("./test.jpg")
+    #extend("./test.jpg", "./expanded", "00", 10, "b")
+    #look("./expanded")
     #print(get("./test.jpg"))
     #print(get("./test.jpg", "f"))

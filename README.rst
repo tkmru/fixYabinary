@@ -72,27 +72,39 @@ You must not set option.
 
 
 ------------------------------------------------------------------------------
-extend(file_path, new_file_path, top_hex, top_bytes, bottom_hex, bottom_bytes)
+extend(file_path, new_file_path, hex, bytes, option)
 ------------------------------------------------------------------------------
 
 make new file that file is extended.
-If top_byte and bottom_byte is str, they are hex.
-If top_byte and bottom_byte is int, they are decimal.
+extend function intepret that byte is decimal. 
+option is None or "t" or "b". option is None by default.
 
 ::
 
     >> import fixYabinary
-    >> fixYabinary.get("./test.png", "./extended", "00", 3, "00", 3)
+    >> fixYabinary.get("./test.png", "./extended", "00", 3)
 
-    Succeeded in making ./extended
-    # 000000 + ./test.png's Binary Data + 000000 in ./extended  
+    Succeeded in making ./extended.
+    # 000000 + ./test.png's Binary Data + 000000 in ./extended
 
 
-It can be used in command line.
+    >> fixYabinary.get("./test.png", "./extended", "00", 3, "t")
+
+    Succeeded in making ./extended.
+    # 000000 + ./test.png's Binary Data in ./extended 
+
+
+    >> fixYabinary.get("./test.png", "./extended", "00", 3, "b")
+
+    Succeeded in making ./extended.
+    # ./test.png's Binary Data + 000000 in ./extended  
+
+
+It can be used in command line in case option is None.
 
 ::
 
-    $ fixYabinary -e test.png extended 00 3 00 3
+    $ fixYabinary -e test.png extended 00 3
 
 
 -------------------
@@ -105,6 +117,7 @@ identify file type in file. return file type.
 
     >> import fixYabinary
     >> fixYabinary.get("./extended")
+    ./extended  include following file type
     png
 
 
