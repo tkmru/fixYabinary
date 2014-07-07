@@ -2,13 +2,20 @@
 fixYabinary
 ===========
 
-This is Python Library to fix "Yabinary" file like foremost.
-The term "Yabinary" in Japanese mean "Dangerous Binary".
-This library can be useful for CTF. It supports Python 2 & 3.
+| This is Python Library to fix "Yabinary" file like foremost. 
+ The term "Yabinary" in Japanese mean "Dangerous Binary". 
+| This library can be useful for CTF. It supports Python 2 & 3. 
+| docment in Japanese(http://tkmr.hatenablog.com/entry/2014/03/25/222207) 
 
-docment in Japanese(http://tkmr.hatenablog.com/entry/2014/03/25/222207)
+change log
+==========
 
-
+| 0.2.2
+| bug fix
+| 0.2.1
+| rewrite something, and change how to extend().
+| 0.2.0
+| can use in command line.
 
 Installation
 ============
@@ -58,8 +65,8 @@ It can be used in command line.
 get(file_path, option)
 ----------------------
 
-return Binary data. If option is "f" , you get Formated Binary.
-You must not set option.
+| return Binary data. If option is "f" , you get Formated Binary.
+| You must not set option.
 
 ::
 
@@ -75,9 +82,9 @@ You must not set option.
 extend(file_path, new_file_path, hex, bytes, option)
 ------------------------------------------------------------------------------
 
-make new file that file is extended.
-extend function intepret that byte is decimal. 
-option is None or "t" or "b". option is None by default.
+| make new file that file is extended.
+  extend function intepret that byte is decimal.  
+| option is None or "t" or "b". option is None by default. 
 
 ::
 
@@ -133,8 +140,8 @@ extract(file_path, new_file_path, start_address, end_address)
 -------------------------------------------------------------
 
 cut out binary data, and write it into new file.
-If start_address and end_address is str, they are hex.
-If start_address and end_address is int, they are decimal.
+If start_address and end_address is str, they are interpreted hex.
+If start_address and end_address is int, they are interpreted decimal.
 
 ::
 

@@ -12,8 +12,8 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.2.1"
-__date__ = "2014/07/07"
+__version__ = "0.2.2"
+__date__ = "2014/07/08"
 __minimum_python_version__ = (2, 7, 6)
 __maximum_python_version__ = (3, 4, 1)
 __copyright__ = "Copyright (c) @tkmru"
@@ -291,6 +291,51 @@ def extend(source_path, dest_path, hex, bytes, option=None):
     except IOError:
         raise Exception("Dest path is wrong.")
 
+'''
+def decode(source_path): 
+    /'/'/'
+    decode steganography
+    /'/'/'
+    try:
+        import PIL #import PIL or Pillow
+
+    except ImportError:
+        if sys.version_info[0] >= 3:
+            raise Exception("Please install Pillow.")
+        else:
+            raise Exception("Please install PIL.")
+
+    try:
+        sr = Image.open(file)
+
+    except IOError:
+        raise Exception("Source path is wrong.")
+        
+    if sr.mode != "RGBA":
+        return
+    width, height = sr.size
+    x, y = 0, 0
+    im = sr.load()
+    string = ""
+
+    while True:
+        pixel_data = ""
+        for num in range(4):
+            bin_val = bin(im[x, y][num])[2:].zfill(8)
+            pixel_data += bin_val[6:8]
+        if int(pixel_data, 2) == 255:
+            break
+        string += chr(int(pixel_data, 2))
+        x++
+        if x >= width:
+            x = 0
+            y += 1
+            if y >= height:
+                break
+    print string
+'''
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(__description__)
@@ -314,7 +359,7 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    identify("./test.jpg")
+    #identify("./test.jpg")
     #extract("./expanded", "./output")
     #extend("./test.jpg", "./expanded", "00", 10, "b")
     #look("./expanded")
