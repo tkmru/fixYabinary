@@ -10,6 +10,8 @@ fixYabinary
 change log
 ==========
 
+| 0.3.0
+| become possible to encode/decode steganography
 | 0.2.2
 | bug fix
 | 0.2.1
@@ -139,9 +141,9 @@ It can be used in command line.
 extract(file_path, new_file_path, start_address, end_address)
 -------------------------------------------------------------
 
-cut out binary data, and write it into new file.
-If start_address and end_address is str, they are interpreted hex.
-If start_address and end_address is int, they are interpreted decimal.
+| cut out binary data, and write it into new file.
+| If start_address and end_address is str, they are interpreted hex.
+| If start_address and end_address is int, they are interpreted decimal.
 
 ::
 

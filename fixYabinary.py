@@ -12,8 +12,8 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.2.2"
-__date__ = "2014/07/08"
+__version__ = "0.2.3"
+__date__ = "2015/09/11"
 __minimum_python_version__ = (2, 7, 6)
 __maximum_python_version__ = (3, 4, 1)
 __copyright__ = "Copyright (c) @tkmru"
@@ -26,36 +26,34 @@ import sys
 import argparse
 
 
-headers = { "jpg" : ["ff d8 ff"],
-            "png" : ["89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52"],
-            "pdf" : ["25 50 44 46"],            
-            "zip" : ["50 4b 03 04",
-                     "50 4b 05 06",
-                     "50 4b 07 08",
-                     "50 4b 4c 49 54 45",
-                     "50 4b 53 70 58",
-                     "57 69 6e 5a 69 70"],
-            "7zip": ["37 7a bc af 27 1c"],
-            "rar" : ["52 61 72 21 1a 07 00"],
-            "mp3" : ["49 44 33"],
-            "mp4" : ["66 74 79 70 33 67 70 35"
-                     "66 74 79 70 4D 53 4E 56"
-                     "66 74 79 70 69 73 6F 6D"],
-            "exe" : ["4D 5A 90 00 03 00 00 00"]
-          }
+headers = {"jpg": ["ff d8 ff"],
+           "png": ["89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52"],
+           "pdf": ["25 50 44 46"],
+           "zip": ["50 4b 03 04",
+                   "50 4b 05 06",
+                   "50 4b 07 08",
+                   "50 4b 4c 49 54 45",
+                   "50 4b 53 70 58",
+                   "57 69 6e 5a 69 70"],
+           "7zip": ["37 7a bc af 27 1c"],
+           "rar": ["52 61 72 21 1a 07 00"],
+           "mp3": ["49 44 33"],
+           "mp4": ["66 74 79 70 33 67 70 35",
+                   "66 74 79 70 4D 53 4E 56",
+                   "66 74 79 70 69 73 6F 6D"],
+           "exe": ["4D 5A 90 00 03 00 00 00"]}
 
-footers = { "jpg" : ["ff d9"],
-            "png" : ["00 00 00 00 49 45 4e 44 ae 42 60 82"],
-            "pdf" : ["0a 25 25 45 4f 46",
-                     "0a 25 25 45 4f 46 0a",
-                     "0d 0a 25 25 45 4f 46 0d 0a",
-                     "0d 25 25 45 4f 46 0d"]
-          }
+footers = {"jpg": ["ff d9"],
+           "png": ["00 00 00 00 49 45 4e 44 ae 42 60 82"],
+           "pdf": ["0a 25 25 45 4f 46",
+                   "0a 25 25 45 4f 46 0a",
+                   "0d 0a 25 25 45 4f 46 0d 0a",
+                   "0d 25 25 45 4f 46 0d"]}
 
 
 def get(source_path, option=None):
     """
-    get Binary data. If option is \"f\" , you get Formated Binary. 
+    get Binary data. If option is \"f\" , you get Formated Binary.
     """
     try:
         with open(source_path, "rb") as f:
@@ -67,11 +65,11 @@ def get(source_path, option=None):
             elif option == "f":
                 return re.sub("(..)", r"\1 ", hex_data)[:-1]
 
-    except IOError:
-        raise Exception("Source path is wrong.")
+            else:
+                raise Exception("option must be 'f' or None")
 
-    except:
-        raise Exception("option must be \"f\" or None")
+    except IOError:
+        raise IOError("Source path is wrong.")
 
 
 def look(source_path):
@@ -119,7 +117,7 @@ def _findDataBeforeNextHeaderOrLast(data):
 
     for key in headers.keys():
         for element in headers[key]:
-            indexies += [(m.start(), key) for m in re.finditer(element, data)] #[(index, key),(index, key)...]
+            indexies += [(m.start(), key) for m in re.finditer(element, data)] # [(index, key),(index, key)...]
 
     indexies = sorted(indexies)
     results = []
@@ -131,12 +129,12 @@ def _findDataBeforeNextHeaderOrLast(data):
     else:
         for i in range(x):
             if i == (x - 1):
-                result = data[indexies[i][0] : indexies[i+1][0] ]
+                result = data[indexies[i][0]: indexies[i+1][0]]
                 results.append((result, indexies[i][1]))
-                result = data[indexies[i+1][0] : ]
+                result = data[indexies[i+1][0]:]
                 results.append((result, indexies[i+1][1]))
             else:
-                result = data[indexies[i][0] : indexies[i+1][0] ]
+                result = data[indexies[i][0]: indexies[i+1][0]]
                 results.append((result, indexies[i][1]))
 
     return results
@@ -144,7 +142,7 @@ def _findDataBeforeNextHeaderOrLast(data):
 
 def extract(source_path, dest_path, start_address=None, end_address=None):
     """
-    extract file in file. cut out file or auto detect file in file. 
+    extract file in file. cut out file or auto detect file in file.
     """
 
     hex_data_formated = get(source_path, "f")
@@ -157,13 +155,13 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         """
         hex_list = hex_data_formated.split(" ")
         # if address is int, it interpret address is decimal
-        if type(start_address) == str: # address to int 
+        if type(start_address) == str: # address to int
             start_address = int(start_address, 16)
 
-        if type(end_address) == str: # address to int 
+        if type(end_address) == str: # address to int
             end_address = int(end_address, 16)
 
-        result = "".join(hex_list[start_address : end_address + 1])
+        result = "".join(hex_list[start_address: end_address + 1])
         result_list.append((result, None))
 
     elif (start_address is None) and (end_address is None):
@@ -178,7 +176,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     for footer in footers[key]:
                         if footer in hex_data_formated_cut:
                             end_index = hex_data_formated_cut.find(footer)+len(footer)
-                            result_list.append((hex_data_formated_cut[ : end_index].replace(" ",""), key))
+                            result_list.append((hex_data_formated_cut[: end_index].replace(" ", ""), key))
                             break
 
                 else: # footer don't match
@@ -194,10 +192,10 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
 
                     result_list.append(("".join(hex_list), key))
 
-        else: # when Yabinary don't have header. 
+        else: # when Yabinary don't have header.
             hex_list = hex_data_formated.split(" ")
             element = _extractElementAppearManyTimes(hex_list)
-            
+
             for _ in range(len(hex_list)):
                 if hex_list[-1] == element:
                     hex_list.pop()
@@ -213,7 +211,6 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                         hex_list.reverse()
                     else:
                         break
-
 
             result_list.append(("".join(hex_list), None))
 
@@ -271,13 +268,13 @@ def extend(source_path, dest_path, hex, bytes, option=None):
     hex_data = get(source_path)
 
     if option is None:
-        new_hex_data = str(hex) * int(bytes) + hex_data + str(hex) * int(bytes)     
+        new_hex_data = str(hex) * int(bytes) + hex_data + str(hex) * int(bytes)
 
     elif option == 't':
-        new_hex_data = str(hex) * int(bytes) + hex_data     
+        new_hex_data = str(hex) * int(bytes) + hex_data
 
     elif option == 'b':
-        new_hex_data = hex_data + str(hex) * int(bytes)          
+        new_hex_data = hex_data + str(hex) * int(bytes)
 
     try:
         with open(dest_path, "wb") as f:
@@ -289,52 +286,7 @@ def extend(source_path, dest_path, hex, bytes, option=None):
         print("Succeeded in making " + dest_path)
 
     except IOError:
-        raise Exception("Dest path is wrong.")
-
-'''
-def decode(source_path): 
-    /'/'/'
-    decode steganography
-    /'/'/'
-    try:
-        import PIL #import PIL or Pillow
-
-    except ImportError:
-        if sys.version_info[0] >= 3:
-            raise Exception("Please install Pillow.")
-        else:
-            raise Exception("Please install PIL.")
-
-    try:
-        sr = Image.open(file)
-
-    except IOError:
-        raise Exception("Source path is wrong.")
-        
-    if sr.mode != "RGBA":
-        return
-    width, height = sr.size
-    x, y = 0, 0
-    im = sr.load()
-    string = ""
-
-    while True:
-        pixel_data = ""
-        for num in range(4):
-            bin_val = bin(im[x, y][num])[2:].zfill(8)
-            pixel_data += bin_val[6:8]
-        if int(pixel_data, 2) == 255:
-            break
-        string += chr(int(pixel_data, 2))
-        x++
-        if x >= width:
-            x = 0
-            y += 1
-            if y >= height:
-                break
-    print string
-'''
-
+        raise IOError("Dest path is wrong.")
 
 
 if __name__ == "__main__":
@@ -359,9 +311,9 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    #identify("./test.jpg")
-    #extract("./expanded", "./output")
-    #extend("./test.jpg", "./expanded", "00", 10, "b")
-    #look("./expanded")
-    #print(get("./test.jpg"))
-    #print(get("./test.jpg", "f"))
+    # identify("./test.jpg")
+    # extract("./expanded", "./output")
+    # extend("./test.jpg", "./expanded", "00", 10, "b")
+    # look("./expanded")
+    # print(get("./test.jpg"))
+    # print(get("./test.jpg", "f"))
