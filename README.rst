@@ -10,8 +10,8 @@ fixYabinary
 change log
 ==========
 
-| 0.3.0
-| become possible to encode/decode steganography
+| 0.2.3
+| change fixYabinary command, import to fy
 | 0.2.2
 | bug fix
 | 0.2.1
