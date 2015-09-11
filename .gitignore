@@ -1,2 +1,5 @@
 build
 fixYabinary.egg-info
+dist
+scripts
+fy.pyc
