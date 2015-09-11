@@ -8,7 +8,7 @@ import shutil
 
 if not os.path.exists('scripts'):
     os.makedirs('scripts')
-shutil.copyfile('fixYabinary.py', 'scripts/fy')
+shutil.copyfile('fy.py', 'scripts/fy')
 
 with open("README.rst", "r") as f:
     readme_file = f.read()
@@ -18,8 +18,8 @@ setup(
     version=__version__,
     author=__author__,
     author_email="i.am.tkmru@gmail.com",
-    py_modules=['fixYabinary'],
-    scripts=['scripts/fixYabinary'],
+    py_modules=['fy'],
+    scripts=['scripts/fy'],
     url="https://github.com/tkmru/fixYabinary",
     license="MIT License",
     keywords=["binary", "ctf"],
