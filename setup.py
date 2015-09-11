@@ -2,7 +2,7 @@
 # coding: UTF-8
 
 from setuptools import setup
-from fixYabinary import __description__, __author__, __version__
+from fy import __description__, __author__, __version__
 import os
 import shutil
 
