@@ -12,8 +12,8 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.2.4"
-__date__ = "2015/09/11"
+__version__ = "0.2.5"
+__date__ = "2015/10/7"
 __minimum_python_version__ = (2, 7, 6)
 __maximum_python_version__ = (3, 4, 3)
 __copyright__ = "Copyright (c) @tkmru"
