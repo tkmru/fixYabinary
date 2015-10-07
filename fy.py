@@ -72,6 +72,11 @@ def get(source_path, option=None):
         raise IOError("Source path is wrong.")
 
 
+def save(target_path, binary):
+    with open(target_path, "wb") as f:
+        f.write(binascii.a2b_hex(binary))
+
+
 def look(source_path):
     """
     look Binary like hexdump
