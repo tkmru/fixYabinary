@@ -10,6 +10,8 @@ fixYabinary
 change log
 ==========
 
+| 0.2.4
+| fix README
 | 0.2.3
 | change fixYabinary command, import to fy
 | 0.2.2
@@ -49,8 +51,8 @@ print Binary like hexdump command.
 
 ::
 
-    >> import fixYabinary
-    >> fixYabinary.look("./test.png")
+    >> import fy
+    >> fy.look("./test.png")
 
                00 01 02 03 04 05 06 07   08 09 0A 0B 0C 0D 0E 0F
     0x000000   00 00 00 00 49 45 4e 44   ae 42....
@@ -60,7 +62,7 @@ It can be used in command line.
 
 ::
 
-    $ fixYabinary -l test.png
+    $ fy -l test.png
 
 
 ----------------------
@@ -72,11 +74,11 @@ get(file_path, option)
 
 ::
 
-    >> import fixYabinary
-    >> fixYabinary.get("./test.png")
+    >> import fy
+    >> fy.get("./test.png")
     0000000049454e44ae42....
 
-    >>fixYabinary.get("./test.png", "f")
+    >>fy.get("./test.png", "f")
     00 00 00 00 49 45 4e 44 ae 42....
 
 
@@ -90,20 +92,20 @@ extend(file_path, new_file_path, hex, bytes, option)
 
 ::
 
-    >> import fixYabinary
-    >> fixYabinary.get("./test.png", "./extended", "00", 3)
+    >> import fy
+    >> fy.get("./test.png", "./extended", "00", 3)
 
     Succeeded in making ./extended.
     # 000000 + ./test.png's Binary Data + 000000 in ./extended
 
 
-    >> fixYabinary.get("./test.png", "./extended", "00", 3, "t")
+    >> fy.get("./test.png", "./extended", "00", 3, "t")
 
     Succeeded in making ./extended.
     # 000000 + ./test.png's Binary Data in ./extended 
 
 
-    >> fixYabinary.get("./test.png", "./extended", "00", 3, "b")
+    >> fy.get("./test.png", "./extended", "00", 3, "b")
 
     Succeeded in making ./extended.
     # ./test.png's Binary Data + 000000 in ./extended  
@@ -113,7 +115,7 @@ It can be used in command line in case option is None.
 
 ::
 
-    $ fixYabinary -e test.png extended 00 3
+    $ fy -e test.png extended 00 3
 
 
 -------------------
@@ -124,8 +126,8 @@ identify file type in file. return file type.
 
 ::
 
-    >> import fixYabinary
-    >> fixYabinary.get("./extended")
+    >> import fy
+    >> fy.get("./extended")
     ./extended  include following file type
     png
 
@@ -134,7 +136,7 @@ It can be used in command line.
 
 ::
 
-    $ fixYabinary -i extended
+    $ fy -i extended
 
 
 -------------------------------------------------------------
@@ -147,16 +149,16 @@ extract(file_path, new_file_path, start_address, end_address)
 
 ::
 
-    >> import fixYabinary
-    >> fixYabinary.extract("./extended", "./result", 4 , 124)
+    >> import fy
+    >> fy.extract("./extended", "./result", 4 , 124)
     Succeeded in making ./result
 
 and auto detect file in file, and write it into new file.
 
 ::
 
-    >> import fixYabinary
-    >> fixYabinary.extract("./extended", "./result")
+    >> import fy
+    >> fy.extract("./extended", "./result")
     Succeeded in making ./result.png
 
 
@@ -164,9 +166,9 @@ It can be used in command line.
 
 ::
 
-    $ fixYabinary -r extended result 4 124  # set start_address and end_address
+    $ fy -r extended result 4 124  # set start_address and end_address
 
-    $ fixYabinary -a extended result        # auto extract file in file
+    $ fy -a extended result        # auto extract file in file
     
 
 
