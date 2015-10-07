@@ -84,9 +84,9 @@ get(file_path, option)
     00 00 00 00 49 45 4e 44 ae 42....
 
 
----------------------
+---------------------------------
 write(file_path, binary, option)
-----------------------
+---------------------------------
 
 | This function write new file from binary string.
 | If option is "l" , set binary list to second arg.
