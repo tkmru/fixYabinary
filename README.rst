@@ -10,6 +10,8 @@ fixYabinary
 change log
 ==========
 
+| 0.2.5
+| add write function
 | 0.2.4
 | fix README
 | 0.2.3
@@ -80,6 +82,25 @@ get(file_path, option)
 
     >>fy.get("./test.png", "f")
     00 00 00 00 49 45 4e 44 ae 42....
+
+
+---------------------
+write(file_path, binary, option)
+----------------------
+
+| This function write new file from binary string.
+| If option is "l" , set binary list to second arg.
+| You must not set option.
+
+::
+    >> import fy
+    >> fy.write('test','01ff4c')
+    >> fy.get('test')
+    u'01ff4c'
+
+    >> fy.write('test',['01','ff','4c'],'l')
+    >> fy.get('test')
+    u'01ff4c'
 
 
 ------------------------------------------------------------------------------
