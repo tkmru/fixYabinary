@@ -72,9 +72,18 @@ def get(source_path, option=None):
         raise IOError("Source path is wrong.")
 
 
-def save(target_path, binary):
+def save(target_path, binary, option=None):
     with open(target_path, "wb") as f:
-        f.write(binascii.a2b_hex(binary))
+        if option is None:
+            f.write(binascii.a2b_hex(binary))
+
+        elif option == 'l':
+            binary_list = map(lambda n: int(n, 16), binary)
+            binary_byte_array = bytearray(binary_list)
+            f.write(binary_byte_array)
+
+        else:
+            raise Exception("option must be 'f' or None")
 
 
 def look(source_path):
