@@ -111,7 +111,7 @@ def look(source_path):
     print(result)
 
 
-def _extractElementAppearManyTimes(list):
+def _extract_element_appeared_many_times(list):
     list_set = set(list)
     counter1 = 0
     element = ""
@@ -126,7 +126,7 @@ def _extractElementAppearManyTimes(list):
     return element
 
 
-def _findDataBeforeNextHeaderOrLast(data):
+def _find_data_before_next_header_or_last(data):
     indexies = []
 
     for key in headers.keys():
@@ -182,7 +182,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         """
         auto detect file in file
         """
-        data_lists = _findDataBeforeNextHeaderOrLast(hex_data_formated)
+        data_lists = _find_data_before_next_header_or_last(hex_data_formated)
 
         if len(data_lists) != 0:
             for hex_data_formated_cut, key in data_lists:
@@ -195,7 +195,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
 
                 else: # footer don't match
                     hex_list = hex_data_formated.split(" ")
-                    element = _extractElementAppearManyTimes(hex_list)
+                    element = _extract_element_appeared_many_times(hex_list)
 
                     for _ in range(len(hex_list)):
                         if hex_list[-1] == element:
@@ -208,7 +208,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
 
         else: # when Yabinary don't have header.
             hex_list = hex_data_formated.split(" ")
-            element = _extractElementAppearManyTimes(hex_list)
+            element = _extract_element_appeared_many_times(hex_list)
 
             for _ in range(len(hex_list)):
                 if hex_list[-1] == element:
@@ -302,6 +302,12 @@ def extend(source_path, dest_path, hex, bytes, option=None):
     except IOError:
         raise IOError("Dest path is wrong.")
 
+'''
+def get_header_index(binary_string):
+    [m.start() for m in re.finditer('test', binary_string)]
+
+def get_footer_index(binary_string):
+'''
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(__description__)
