@@ -26,29 +26,29 @@ import sys
 import argparse
 
 
-headers = {"jpg": ["ff d8 ff"],
-           "png": ["89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52"],
-           "pdf": ["25 50 44 46"],
-           "zip": ["50 4b 03 04",
-                   "50 4b 05 06",
-                   "50 4b 07 08",
-                   "50 4b 4c 49 54 45",
-                   "50 4b 53 70 58",
-                   "57 69 6e 5a 69 70"],
-           "7zip": ["37 7a bc af 27 1c"],
-           "rar": ["52 61 72 21 1a 07 00"],
-           "mp3": ["49 44 33"],
-           "mp4": ["66 74 79 70 33 67 70 35",
-                   "66 74 79 70 4D 53 4E 56",
-                   "66 74 79 70 69 73 6F 6D"],
-           "exe": ["4D 5A 90 00 03 00 00 00"]}
+headers = {"jpg": ["ffd8ff"],
+           "png": ["89504e470d0a1a0a0000000d49484452"],
+           "pdf": ["25504446"],
+           "zip": ["504b0304",
+                   "504b0506",
+                   "504b0708",
+                   "504b4c495445",
+                   "504b537058",
+                   "57696e5a6970"],
+           "7zip": ["377abcaf271c"],
+           "rar": ["526172211a0700"],
+           "mp3": ["494433"],
+           "mp4": ["6674797033677035",
+                   "667479704D534E56",
+                   "6674797069736F6D"],
+           "exe": ["4D5A900003000000"]}
 
-footers = {"jpg": ["ff d9"],
-           "png": ["00 00 00 00 49 45 4e 44 ae 42 60 82"],
-           "pdf": ["0a 25 25 45 4f 46",
-                   "0a 25 25 45 4f 46 0a",
-                   "0d 0a 25 25 45 4f 46 0d 0a",
-                   "0d 25 25 45 4f 46 0d"]}
+footers = {"jpg": ["ffd9"],
+           "png": ["0000000049454e44ae426082"],
+           "pdf": ["0a2525454f46",
+                   "0a2525454f460a",
+                   "0d0a2525454f460d0a",
+                   "0d2525454f460d"]}
 
 
 def get(source_path, option=None):
@@ -262,16 +262,14 @@ def identify(source_path):
     """
     identify file type in file
     """
-    hex_data_formated = get(source_path, "f")
-    indexies = []
-
-    for key in headers.keys():
-        for element in headers[key]:
-            indexies += [key for m in re.finditer(element, hex_data_formated)]
-
-    print(source_path + " include following file")
-    for key in indexies: # tuple in indexies
-        print(key)
+    hex_data = get(source_path)
+    '''
+    print(source_path + " include following FILE SIGNATURES")
+    print('header:')
+    #for  get_header_index(hex_data)
+    print('footer:')
+    print get_footer_index(hex_data)
+    '''
 
 
 def extend(source_path, dest_path, hex, bytes, option=None):
@@ -302,12 +300,34 @@ def extend(source_path, dest_path, hex, bytes, option=None):
     except IOError:
         raise IOError("Dest path is wrong.")
 
-'''
+
 def get_header_index(binary_string):
-    [m.start() for m in re.finditer('test', binary_string)]
+    result = {}
+    for key, headers_list in headers.items():
+        indexies = []
+        for header in headers_list:
+            # if m.start() % 2 check correct match
+            indexies += [m.start() for m in re.finditer(header, binary_string) if m.start() % 2 == 0]
+
+        if indexies != []:
+            result[key] = indexies
+
+    return result # return value: {zip:[12]}
+
 
 def get_footer_index(binary_string):
-'''
+    result = {}
+    for key, footers_list in footers.items():
+        indexies = []
+        for footer in footers_list:
+            # if m.start() % 2 check correct match
+            indexies += [m.start() for m in re.finditer(footer, binary_string) if m.start() % 2 == 0]
+
+        if indexies != []:
+            result[key] = indexies
+
+    return result # return value: {zip:[12]}
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(__description__)
@@ -337,3 +357,5 @@ if __name__ == "__main__":
     # look("./expanded")
     # print(get("./test.jpg"))
     # print(get("./test.jpg", "f"))
+    print get_header_index(get('/Users/takemaru/Downloads/web.pdf'))
+    print get_footer_index(get('/Users/takemaru/Downloads/web.pdf'))
