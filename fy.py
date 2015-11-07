@@ -159,14 +159,13 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
     extract file in file. cut out file or auto detect file in file.
     """
 
-    hex_data_formated = get(source_path, "f")
-
-    result_list = []
+    result_list = [] # (result hex data, file type)
 
     if (start_address is not None) and (end_address is not None):
         """
         cut out file
         """
+        hex_data_formated = get(source_path, "f")
         hex_list = hex_data_formated.split(" ")
         # if address is int, it interpret address is decimal
         if type(start_address) == str: # address to int
@@ -183,8 +182,8 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         auto detect file in file
         """
         data_lists = _find_data_before_next_header_or_last(hex_data_formated)
-
         if len(data_lists) != 0:
+            '''
             for hex_data_formated_cut, key in data_lists:
                 if key == "pdf" or key == "jpg" or key == "png":
                     for footer in footers[key]:
@@ -193,7 +192,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                             result_list.append((hex_data_formated_cut[: end_index].replace(" ", ""), key))
                             break
 
-                else: # footer don't match
+                else: # footer don't match remove data appeared many times
                     hex_list = hex_data_formated.split(" ")
                     element = _extract_element_appeared_many_times(hex_list)
 
@@ -205,8 +204,12 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                             break
 
                     result_list.append(("".join(hex_list), key))
-
-        else: # when Yabinary don't have header.
+            '''
+        else: # when Yabinary don't have header and footer.
+            '''
+            remove data appeared many times
+            '''
+            hex_data_formated = get(source_path, "f")
             hex_list = hex_data_formated.split(" ")
             element = _extract_element_appeared_many_times(hex_list)
 
@@ -226,7 +229,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     else:
                         break
 
-            result_list.append(("".join(hex_list), None))
+            result_list.append(("".join(hex_list), None)) # file type is None
 
     else:
         raise Exception("Both third and fourth args must be None or address.")
