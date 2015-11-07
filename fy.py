@@ -246,23 +246,23 @@ def identify(source_path):
     print(source_path + " include following FILE SIGNATURES")
 
     print('HEADER')
-    for file_type, indexies in get_header_index(hex_data).items():
+    for file_type, indexies in get_signature_index(hex_data, headers).items():
         result = file_type+': '
-        for i, v in enumerate(indexies):
+        for i, location in enumerate(indexies):
             if i == (len(indexies)-1):
-                result += str(v/2)+' bytes'
+                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
             else:
-                result += str(v/2)+' bytes, '
+                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
         print result
 
     print('\nFOOTER')
-    for file_type, indexies in get_footer_index(hex_data).items():
+    for file_type, indexies in get_signature_index(hex_data, footers).items():
         result = file_type+': '
-        for i, v in enumerate(indexies):
+        for i, location in enumerate(indexies):
             if i == (len(indexies)-1):
-                result += str(v/2)+' bytes'
+                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
             else:
-                result += str(v/2)+' bytes, '
+                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
         print result
 
 
@@ -331,7 +331,7 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    #identify('/Users/takemaru/Downloads/web.pdf')
+    identify('/Users/takemaru/Downloads/web.pdf')
     # extract("./expanded", "./output")
     # extend("./test.jpg", "./expanded", "00", 10, "b")
     # look("./expanded")
