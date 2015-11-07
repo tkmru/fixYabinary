@@ -126,34 +126,6 @@ def _extract_element_appeared_many_times(list):
     return element
 
 
-def _find_data_before_next_header_or_last(data):
-    indexies = []
-
-    for key in headers.keys():
-        for element in headers[key]:
-            indexies += [(m.start(), key) for m in re.finditer(element, data)] # [(index, key),(index, key)...]
-
-    indexies = sorted(indexies)
-    results = []
-
-    x = len(indexies) - 1
-    if x == 0:
-        result = data[indexies[0][0]:]
-        results.append((result, indexies[0][1]))
-    else:
-        for i in range(x):
-            if i == (x - 1):
-                result = data[indexies[i][0]: indexies[i+1][0]]
-                results.append((result, indexies[i][1]))
-                result = data[indexies[i+1][0]:]
-                results.append((result, indexies[i+1][1]))
-            else:
-                result = data[indexies[i][0]: indexies[i+1][0]]
-                results.append((result, indexies[i][1]))
-
-    return results
-
-
 def extract(source_path, dest_path, start_address=None, end_address=None):
     """
     extract file in file. cut out file or auto detect file in file.
@@ -181,10 +153,13 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         """
         auto detect file in file
         """
-        data_lists = _find_data_before_next_header_or_last(hex_data_formated)
-        if len(data_lists) != 0:
+        hex_data = get(source_path)
+        header_indexies = get_header_index(hex_data)
+
+        if len(header_indexies) != 0:
+            footer_indexies = get_footer_index(hex_data)
             '''
-            for hex_data_formated_cut, key in data_lists:
+            for key, indexies in header_indexies.items():
                 if key == "pdf" or key == "jpg" or key == "png":
                     for footer in footers[key]:
                         if footer in hex_data_formated_cut:
@@ -205,6 +180,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
 
                     result_list.append(("".join(hex_list), key))
             '''
+
         else: # when Yabinary don't have header and footer.
             '''
             remove data appeared many times
@@ -319,32 +295,18 @@ def extend(source_path, dest_path, hex, bytes, option=None):
         raise IOError("Dest path is wrong.")
 
 
-def get_header_index(binary_string):
+def get_signature_index(binary_string, signatures_dict):
     result = {}
-    for key, headers_list in headers.items():
+    for key, signatures_list in signatures_dict.items():
         indexies = []
-        for header in headers_list:
+        for signature in signatures_list:
             # if m.start() % 2 check correct match
-            indexies += [m.start() for m in re.finditer(header, binary_string) if m.start() % 2 == 0]
+            indexies += [[m.start(), m.start()+len(signature)-1] for m in re.finditer(signature, binary_string) if m.start() % 2 == 0]
 
         if indexies != []:
             result[key] = indexies
 
-    return result # return value: {zip:[12]}
-
-
-def get_footer_index(binary_string):
-    result = {}
-    for key, footers_list in footers.items():
-        indexies = []
-        for footer in footers_list:
-            # if m.start() % 2 check correct match
-            indexies += [m.start() for m in re.finditer(footer, binary_string) if m.start() % 2 == 0]
-
-        if indexies != []:
-            result[key] = indexies
-
-    return result # return value: {zip:[12]}
+    return result # return value: {file type:[[begin index, end index], [begin index, end index]]}
 
 
 if __name__ == "__main__":
@@ -369,10 +331,10 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    identify('/Users/takemaru/Downloads/web.pdf')
+    #identify('/Users/takemaru/Downloads/web.pdf')
     # extract("./expanded", "./output")
     # extend("./test.jpg", "./expanded", "00", 10, "b")
     # look("./expanded")
     # print(get("./test.jpg"))
     # print(get("./test.jpg", "f"))
-    #print get_footer_index(get('/Users/takemaru/Downloads/web.pdf'))
+    #print get_signature_index(get('/Users/takemaru/Downloads/web.pdf'), headers)
