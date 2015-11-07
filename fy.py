@@ -263,13 +263,28 @@ def identify(source_path):
     identify file type in file
     """
     hex_data = get(source_path)
-    '''
+
     print(source_path + " include following FILE SIGNATURES")
-    print('header:')
-    #for  get_header_index(hex_data)
-    print('footer:')
-    print get_footer_index(hex_data)
-    '''
+
+    print('HEADER')
+    for file_type, indexies in get_header_index(hex_data).items():
+        result = file_type+': '
+        for i, v in enumerate(indexies):
+            if i == (len(indexies)-1):
+                result += str(v/2)+' bytes'
+            else:
+                result += str(v/2)+' bytes, '
+        print result
+
+    print('\nFOOTER')
+    for file_type, indexies in get_footer_index(hex_data).items():
+        result = file_type+': '
+        for i, v in enumerate(indexies):
+            if i == (len(indexies)-1):
+                result += str(v/2)+' bytes'
+            else:
+                result += str(v/2)+' bytes, '
+        print result
 
 
 def extend(source_path, dest_path, hex, bytes, option=None):
@@ -351,11 +366,10 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    # identify("./test.jpg")
+    identify('/Users/takemaru/Downloads/web.pdf')
     # extract("./expanded", "./output")
     # extend("./test.jpg", "./expanded", "00", 10, "b")
     # look("./expanded")
     # print(get("./test.jpg"))
     # print(get("./test.jpg", "f"))
-    print get_header_index(get('/Users/takemaru/Downloads/web.pdf'))
-    print get_footer_index(get('/Users/takemaru/Downloads/web.pdf'))
+    #print get_footer_index(get('/Users/takemaru/Downloads/web.pdf'))
