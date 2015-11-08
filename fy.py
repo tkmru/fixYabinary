@@ -127,11 +127,11 @@ def _extract_element_appeared_many_times(list):
 
 
 def extract(source_path, dest_path, start_address=None, end_address=None):
-    """
+    '''
     extract file in file. cut out file or auto detect file in file.
-    """
+    '''
 
-    result_list = [] # (result hex data, file type)
+    result_data = () # (result (hex data, file type)
 
     if (start_address is not None) and (end_address is not None):
         """
@@ -147,39 +147,52 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
             end_address = int(end_address, 16)
 
         result = "".join(hex_list[start_address: end_address + 1])
-        result_list.append((result, None))
+        result_data = (result, None)
 
     elif (start_address is None) and (end_address is None):
-        """
+        '''
         auto detect file in file
-        """
+        '''
         hex_data = get(source_path)
         header_indexies = get_signature_index(hex_data, headers)
 
         if len(header_indexies) != 0:
+            '''
+            use header smallest address
+            '''
+            result_filetype = header_indexies.keys()[0]
+            min_begin_index = header_indexies[result_filetype][0][0]
+            for filetype, header_indexies_list in header_indexies.items():
+                for header_index in header_indexies_list:
+                    if header_index[0] < min_begin_index:
+                        min_begin_index = header_index[0]
+                        result_filetype = filetype
+
             footer_indexies = get_signature_index(hex_data, footers)
-            '''
-            for key, indexies in header_indexies.items():
-                if key == "pdf" or key == "jpg" or key == "png":
-                    for footer in footers[key]:
-                        if footer in hex_data_formated_cut:
-                            end_index = hex_data_formated_cut.find(footer)+len(footer)
-                            result_list.append((hex_data_formated_cut[: end_index].replace(" ", ""), key))
-                            break
+            max_end_index = 0
+            if result_filetype in footer_indexies:
+                '''
+                use footer largest address
+                '''
+                for footer in footer_indexies[result_filetype]:
+                    if max_end_index < footer[1]:
+                        max_end_index = footer[1]
 
-                else: # footer don't match remove data appeared many times
-                    hex_list = hex_data_formated.split(" ")
-                    element = _extract_element_appeared_many_times(hex_list)
+                result_data = (hex_data[min_begin_index: max_end_index+1], result_filetype)
 
-                    for _ in range(len(hex_list)):
-                        if hex_list[-1] == element:
-                            hex_list.pop()
+            else: # footer don't match remove data appeared many times
+                hex_data_formated = get(source_path, "f")
+                hex_list = hex_data_formated.split(" ")
+                element = _extract_element_appeared_many_times(hex_list)
 
-                        else:
-                            break
+                for _ in range(len(hex_list)):
+                    if hex_list[-1] == element:
+                        hex_list.pop()
 
-                    result_list.append(("".join(hex_list), key))
-            '''
+                    else:
+                        break
+
+                result_data = ("".join(hex_list), result_filetype)
 
         else: # when Yabinary don't have header and footer.
             '''
@@ -205,36 +218,31 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     else:
                         break
 
-            result_list.append(("".join(hex_list), None)) # file type is None
+            result_data = ("".join(hex_list), None) # file type is None
 
     else:
         raise Exception("Both third and fourth args must be None or address.")
 
-    for index, result_tuple in enumerate(result_list):
-        result, file_type = result_tuple[0], result_tuple[1]
-        if index == 0:
-            pass
-        else:
-            dest_path += str(index + 1)
+    result_binary_string, file_type = result_data[0], result_data[1]
 
-        if file_type is None:
-            with open(dest_path, "wb") as f:
-                if sys.version_info[0] >= 3:
-                    f.write(bytes.fromhex(result))
-                else:
-                    f.write(result.decode("hex"))
-            print("Succeeded in making " + dest_path)
+    if file_type is None:
+        with open(dest_path, "wb") as f:
+            if sys.version_info[0] >= 3:
+                f.write(bytes.fromhex(result_binary_string))
+            else:
+                f.write(result_binary_string.decode("hex"))
+        print("Succeeded in making " + dest_path)
 
-        else:
-            dest_path = dest_path + "." + file_type
+    else:
+        dest_path = dest_path + "." + file_type
 
-            with open(dest_path, "wb") as f:
-                if sys.version_info[0] >= 3:
-                    f.write(bytes.fromhex(result))
-                else:
-                    f.write(result.decode("hex"))
+        with open(dest_path, "wb") as f:
+            if sys.version_info[0] >= 3:
+                f.write(bytes.fromhex(result_binary_string))
+            else:
+                f.write(result_binary_string.decode("hex"))
 
-            print("Succeeded in making " + dest_path)
+        print("Succeeded in making " + dest_path)
 
 
 def identify(source_path):
@@ -331,10 +339,12 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    # identify('/Users/takemaru/Downloads/web.pdf')
+    # for debug
+    # identify('./a.pdf')
     # extract("./expanded", "./output")
-    # extend("./test.jpg", "./expanded", "00", 10, "b")
+    # extract("./expanded", "./output", 10, 30)
+    # extend('./a.pdf', "./expanded", "00", 10)
     # look("./expanded")
     # print(get("./test.jpg"))
     # print(get("./test.jpg", "f"))
-    #print get_signature_index(get('/Users/takemaru/Downloads/web.pdf'), headers)
+    # print get_signature_index(get('./a.pdf'), headers)
