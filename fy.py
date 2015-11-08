@@ -137,8 +137,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         """
         cut out file
         """
-        hex_data_formated = get(source_path, "f")
-        hex_list = hex_data_formated.split(" ")
+        hex_data = get(source_path)
         # if address is int, it interpret address is decimal
         if type(start_address) == str: # address to int
             start_address = int(start_address, 16)
@@ -146,8 +145,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         if type(end_address) == str: # address to int
             end_address = int(end_address, 16)
 
-        result = "".join(hex_list[start_address: end_address + 1])
-        result_data = (result, None)
+        result_data = (hex_data[start_address*2-2: end_address*2], None)
 
     elif (start_address is None) and (end_address is None):
         '''
