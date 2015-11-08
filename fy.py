@@ -12,10 +12,10 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.2.5"
-__date__ = "2015/10/7"
+__version__ = "0.2.6"
+__date__ = "2015/11/9"
 __minimum_python_version__ = (2, 7, 6)
-__maximum_python_version__ = (3, 4, 3)
+__maximum_python_version__ = (3, 5, 0)
 __copyright__ = "Copyright (c) @tkmru"
 __license__ = "MIT License"
 
@@ -154,10 +154,10 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         auto detect file in file
         """
         hex_data = get(source_path)
-        header_indexies = get_header_index(hex_data)
+        header_indexies = get_signature_index(hex_data, headers)
 
         if len(header_indexies) != 0:
-            footer_indexies = get_footer_index(hex_data)
+            footer_indexies = get_signature_index(hex_data, footers)
             '''
             for key, indexies in header_indexies.items():
                 if key == "pdf" or key == "jpg" or key == "png":
@@ -331,7 +331,7 @@ if __name__ == "__main__":
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
-    identify('/Users/takemaru/Downloads/web.pdf')
+    # identify('/Users/takemaru/Downloads/web.pdf')
     # extract("./expanded", "./output")
     # extend("./test.jpg", "./expanded", "00", 10, "b")
     # look("./expanded")
