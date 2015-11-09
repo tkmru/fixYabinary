@@ -338,7 +338,7 @@ if __name__ == "__main__":
         extract(args.auto_extract[0], args.auto_extract[1])
 
     # for debug
-    # identify('./a.pdf')
+    # identify('./expanded')
     # extract("./expanded", "./output")
     # extract("./expanded", "./output", 10, 30)
     # extend('./a.pdf', "./expanded", "00", 10)

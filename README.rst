@@ -10,8 +10,10 @@ fixYabinary
 change log
 ==========
 
+| 0.2.6
+| add get_signature_index()
 | 0.2.5
-| add write function
+| add write()
 | 0.2.4
 | fix README
 | 0.2.3
@@ -149,9 +151,15 @@ identify file type in file. return file type.
 ::
 
     >> import fy
-    >> fy.get("./extended")
-    ./extended  include following file type
-    png
+    >> fy.identify("./extended")
+    ./expanded include following FILE SIGNATURES
+    HEADER
+    pdf: 10 bytes - 13 bytes
+    jpg: 131076 bytes - 131078 bytes, 152310 bytes - 152312 bytes, 1352263 bytes - 1352265 bytes
+
+    FOOTER
+    pdf: 2340568 bytes - 2340573 bytes, 2340568 bytes - 2340574 bytes
+    jpg: 32981 bytes - 32982 bytes, 79754 bytes - 79755 bytes
 
 
 It can be used in command line.
