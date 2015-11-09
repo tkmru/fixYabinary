@@ -145,7 +145,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         if type(end_address) == str: # address to int
             end_address = int(end_address, 16)
 
-        result_data = (hex_data[start_address*2-2: end_address*2], None)
+        result_data = (hex_data[start_address*2: end_address*2+2], None)
 
     elif (start_address is None) and (end_address is None):
         '''
@@ -340,7 +340,7 @@ if __name__ == "__main__":
     # for debug
     # identify('./a.pdf')
     # extract("./expanded", "./output")
-    # extract("./expanded", "./output", 10, 30)
+    extract("./expanded", "./output", 10, 30)
     # extend('./a.pdf', "./expanded", "00", 10)
     # look("./expanded")
     # print(get("./test.jpg"))
