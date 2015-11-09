@@ -340,7 +340,7 @@ if __name__ == "__main__":
     # for debug
     # identify('./a.pdf')
     # extract("./expanded", "./output")
-    extract("./expanded", "./output", 10, 30)
+    # extract("./expanded", "./output", 10, 30)
     # extend('./a.pdf', "./expanded", "00", 10)
     # look("./expanded")
     # print(get("./test.jpg"))

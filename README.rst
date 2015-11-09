@@ -93,6 +93,7 @@ write(file_path, binary, option)
 | You must not set option.
 
 ::
+
     >> import fy
     >> fy.write('test','01ff4c')
     >> fy.get('test')
