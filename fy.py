@@ -12,7 +12,7 @@ Released under MIT License.
 
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
-__version__ = "0.2.6"
+__version__ = "0.2.7"
 __date__ = "2015/11/9"
 __minimum_python_version__ = (2, 7, 6)
 __maximum_python_version__ = (3, 5, 0)
@@ -259,7 +259,7 @@ def identify(source_path):
                 result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
             else:
                 result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
-        print result
+        print(result)
 
     print('\nFOOTER')
     for file_type, indexies in get_signature_index(hex_data, footers).items():
@@ -269,7 +269,7 @@ def identify(source_path):
                 result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
             else:
                 result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
-        print result
+        print(result)
 
 
 def extend(source_path, dest_path, hex, bytes, option=None):
