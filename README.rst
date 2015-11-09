@@ -9,9 +9,10 @@ fixYabinary
 
 change log
 ==========
-
+| 0.2.7
+| bug fix
 | 0.2.6
-| add get_signature_index()
+| add get_signature_index(), rewite identify(), extract()
 | 0.2.5
 | add write()
 | 0.2.4
