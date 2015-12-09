@@ -298,7 +298,7 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--identify', nargs=1, metavar='source_path', help='identify file type in file.')
     parser.add_argument('-e', '--extend', nargs=4, metavar=('source_path', 'dest_path', 'hex', bytes), help='make new file that file is extended.')
     parser.add_argument('-r', '--extract', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='extract file in file.')
-    parser.add_argument('-a', '--auto_extract', nargs=2, metavar=('source_path', 'dest_path'), help='auto extract file in file.')
+    parser.add_argument('-a', '--auto_extract', nargs='*', metavar=('source_path', 'dest_path'), help='auto extract file in file.')
     parser.add_argument('--version', '-v', action='version', version=__version__)
 
     args = parser.parse_args()
@@ -311,6 +311,8 @@ if __name__ == "__main__":
         extend(args.extend[0], args.extend[1], args.extend[2], args.extend[3], args.extend[4], args.extend[5])
     elif args.extract:
         extract(args.extract[0], args.extract[1], args.extract[2], args.extract[3])
+    elif len(args.auto_extract) == 1:
+        extract(args.auto_extract[0], 'result')
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
