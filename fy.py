@@ -24,31 +24,8 @@ import re
 import binascii
 import sys
 import argparse
-
-
-headers = {"jpg": ["ffd8ff"],
-           "png": ["89504e470d0a1a0a0000000d49484452"],
-           "pdf": ["25504446"],
-           "zip": ["504b0304",
-                   "504b0506",
-                   "504b0708",
-                   "504b4c495445",
-                   "504b537058",
-                   "57696e5a6970"],
-           "7zip": ["377abcaf271c"],
-           "rar": ["526172211a0700"],
-           "mp3": ["494433"],
-           "mp4": ["6674797033677035",
-                   "667479704D534E56",
-                   "6674797069736F6D"],
-           "exe": ["4D5A900003000000"]}
-
-footers = {"jpg": ["ffd9"],
-           "png": ["0000000049454e44ae426082"],
-           "pdf": ["0a2525454f46",
-                   "0a2525454f460a",
-                   "0d0a2525454f460d0a",
-                   "0d2525454f460d"]}
+from signature import headers
+from signature import footers
 
 
 def get(source_path, option=None):
