@@ -18,7 +18,7 @@ setup(
     version=__version__,
     author=__author__,
     author_email="i.am.tkmru@gmail.com",
-    py_modules=['fy'],
+    py_modules=['fy', 'signature'],
     scripts=['scripts/fy'],
     url="https://github.com/tkmru/fixYabinary",
     license="MIT License",
