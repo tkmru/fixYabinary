@@ -228,25 +228,28 @@ def identify(source_path):
 
     print(source_path + " include following FILE SIGNATURES")
 
-    print('HEADER')
-    for file_type, indexies in get_signature_index(hex_data, headers).items():
-        result = file_type+': '
-        for i, location in enumerate(indexies):
-            if i == (len(indexies)-1):
+    footer_result = get_signature_index(hex_data, footers)
+    for file_type, header_indexies in get_signature_index(hex_data, headers).items():
+        print('File type: '+file_type+' Detect: '+str(len(header_indexies))+' files')
+        print('HEADER')
+        result = ''
+        for i, location in enumerate(header_indexies):
+            if i == (len(header_indexies)-1):
                 result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
             else:
                 result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
         print(result)
 
-    print('\nFOOTER')
-    for file_type, indexies in get_signature_index(hex_data, footers).items():
-        result = file_type+': '
-        for i, location in enumerate(indexies):
-            if i == (len(indexies)-1):
-                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
-            else:
-                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
-        print(result)
+        print('FOOTER')
+        result = ''
+        if file_type in footer_result:
+            footer_indexies = footer_result[file_type]
+            for i, location in enumerate(footer_indexies):
+                if i == (len(footer_indexies)-1):
+                    result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
+                else:
+                    result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
+        print(result+'\n')
 
 
 def extend(source_path, dest_path, hex, bytes, option=None):
