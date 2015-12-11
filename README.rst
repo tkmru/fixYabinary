@@ -9,6 +9,9 @@ fixYabinary
 
 change log
 ==========
+| 0.2.8
+| add many signatures
+| change extract single files to extract many files
 | 0.2.7
 | bug fix
 | 0.2.6
@@ -190,8 +193,9 @@ and auto detect file in file, and write it into new file.
 
     >> import fy
     >> fy.extract("./extended", "./result")
-    Succeeded in making ./result.png
-
+    Succeeded in making ./result1.png
+    Succeeded in making ./result2.png
+    Succeeded in making ./result2.jpg
 
 It can be used in command line.
 
