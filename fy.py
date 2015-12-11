@@ -108,8 +108,6 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
     extract file in file. cut out file or auto detect file in file.
     '''
 
-    result_data = () # (result (hex data, file type)
-
     if (start_address is not None) and (end_address is not None):
         """
         cut out file
@@ -136,7 +134,8 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
             '''
             use header smallest address
             '''
-            for file_type, header_indexies in get_signature_index(hex_data, headers).items():
+            header_infomation = get_signature_index(hex_data, headers).items()
+            for file_type, header_indexies in header_infomation:
                 footer_indexies = []
                 for i, header_index in enumerate(header_indexies):
                     footer_indexies = []
@@ -149,23 +148,19 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     if len(footer_indexies) != 0:
                         min_footer_index = min(footer_indexies)
                         extract_data = hex_data[header_index[0]: header_index[1]] + hex_data[header_index[1]:][:min_footer_index]
-                        write(dest_path+str(i)+'.'+file_type, extract_data)
-                        print('Succeeded in making {0}.{1}'.format(dest_path+str(i), file_type))
+                        write(dest_path+str(i+1)+'.'+file_type, extract_data)
+                        print('Succeeded in making {0}.{1}'.format(dest_path+str(i+1), file_type))
 
-                    '''else: # footer don't match remove data appeared many times
-                        hex_data_formated = get(source_path, "f")
-                        hex_list = hex_data_formated.split(" ")
-                        element = _extract_element_appeared_many_times(hex_list)
+                    else: # if footer is None
+                        near_header_indexies = []
+                        for file_type, after_header_indexies in header_infomation:
+                            for after_header_index in after_header_indexies:
+                                if after_header_index[0] > header_index[1]:
+                                    near_header_indexies.append(header_index[1])
 
-                        for _ in range(len(hex_list)):
-                            if hex_list[-1] == element:
-                                hex_list.pop()
-
-                            else:
-                                break
-
-                        write(dest_path+str(i)+'.'+file_type, extract_data)
-                        print('Succeeded in making {0}.{1}'.format(dest_path+str(i), file_type))'''
+                        if len(near_header_indexies) != 0: # extract data from header to next header
+                            write(dest_path+str(i+1)+'.'+file_type, hex_data[header_index[0]: min(near_header_indexies)+1])
+                            print('Succeeded in making {0}.{1}'.format(dest_path+str(i+1), file_type))
 
         else: # when Yabinary don't have header and footer.
             '''
