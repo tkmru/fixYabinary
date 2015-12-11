@@ -122,52 +122,50 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
         if type(end_address) == str: # address to int
             end_address = int(end_address, 16)
 
-        result_data = (hex_data[start_address*2: end_address*2+2], None)
+        write(dest_path, hex_data[start_address*2: end_address*2+2])
+        print('Succeeded in making '+dest_path)
 
     elif (start_address is None) and (end_address is None):
         '''
         auto detect file in file
         '''
         hex_data = get(source_path)
-        header_indexies = get_signature_index(hex_data, headers)
+        header_indexies = get_signature_index(hex_data, headers) # {file type:[[begin index, end index], [begin index, end index]]}
 
         if len(header_indexies) != 0:
             '''
             use header smallest address
             '''
-            result_filetype = header_indexies.keys()[0]
-            min_begin_index = header_indexies[result_filetype][0][0]
-            for filetype, header_indexies_list in header_indexies.items():
-                for header_index in header_indexies_list:
-                    if header_index[0] < min_begin_index:
-                        min_begin_index = header_index[0]
-                        result_filetype = filetype
+            for file_type, header_indexies in get_signature_index(hex_data, headers).items():
+                footer_indexies = []
+                for i, header_index in enumerate(header_indexies):
+                    footer_indexies = []
+                    for signature in footers[file_type]:
+                        header_end_index = header_index[1]
+                        footer_index = hex_data[header_end_index:].find(signature)
+                        if footer_index % 2 == 1:
+                            footer_indexies.append(hex_data[header_end_index:].find(signature)+len(signature))
 
-            footer_indexies = get_signature_index(hex_data, footers)
-            max_end_index = 0
-            if result_filetype in footer_indexies:
-                '''
-                use footer largest address
-                '''
-                for footer in footer_indexies[result_filetype]:
-                    if max_end_index < footer[1]:
-                        max_end_index = footer[1]
+                    if len(footer_indexies) != 0:
+                        min_footer_index = min(footer_indexies)
+                        extract_data = hex_data[header_index[0]: header_index[1]] + hex_data[header_index[1]:][:min_footer_index]
+                        write(dest_path+str(i)+'.'+file_type, extract_data)
+                        print('Succeeded in making {0}.{1}'.format(dest_path+str(i), file_type))
 
-                result_data = (hex_data[min_begin_index: max_end_index+1], result_filetype)
+                    '''else: # footer don't match remove data appeared many times
+                        hex_data_formated = get(source_path, "f")
+                        hex_list = hex_data_formated.split(" ")
+                        element = _extract_element_appeared_many_times(hex_list)
 
-            else: # footer don't match remove data appeared many times
-                hex_data_formated = get(source_path, "f")
-                hex_list = hex_data_formated.split(" ")
-                element = _extract_element_appeared_many_times(hex_list)
+                        for _ in range(len(hex_list)):
+                            if hex_list[-1] == element:
+                                hex_list.pop()
 
-                for _ in range(len(hex_list)):
-                    if hex_list[-1] == element:
-                        hex_list.pop()
+                            else:
+                                break
 
-                    else:
-                        break
-
-                result_data = ("".join(hex_list), result_filetype)
+                        write(dest_path+str(i)+'.'+file_type, extract_data)
+                        print('Succeeded in making {0}.{1}'.format(dest_path+str(i), file_type))'''
 
         else: # when Yabinary don't have header and footer.
             '''
@@ -193,31 +191,11 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     else:
                         break
 
-            result_data = ("".join(hex_list), None) # file type is None
+            write(dest_path, "".join(hex_list))
+            print('Succeeded in making {0}'.format(dest_path))
 
     else:
         raise Exception("Both third and fourth args must be None or address.")
-
-    result_binary_string, file_type = result_data[0], result_data[1]
-
-    if file_type is None:
-        with open(dest_path, "wb") as f:
-            if sys.version_info[0] >= 3:
-                f.write(bytes.fromhex(result_binary_string))
-            else:
-                f.write(result_binary_string.decode("hex"))
-        print("Succeeded in making " + dest_path)
-
-    else:
-        dest_path = dest_path + "." + file_type
-
-        with open(dest_path, "wb") as f:
-            if sys.version_info[0] >= 3:
-                f.write(bytes.fromhex(result_binary_string))
-            else:
-                f.write(result_binary_string.decode("hex"))
-
-        print("Succeeded in making " + dest_path)
 
 
 def identify(source_path):
@@ -315,7 +293,7 @@ if __name__ == "__main__":
     elif args.extract:
         extract(args.extract[0], args.extract[1], args.extract[2], args.extract[3])
     elif len(args.auto_extract) == 1:
-        extract(args.auto_extract[0], 'result')
+        extract(args.auto_extract[0], './result')
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
