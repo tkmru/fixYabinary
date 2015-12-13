@@ -204,7 +204,8 @@ It can be used in command line.
     $ fy -r extended result 4 124  # set start_address and end_address
 
     $ fy -a extended result        # auto extract file in file
-    
+
+    $ fy -a extended               # if new_file_path is None, auto set ./result to new_file_path
 
 
 License
