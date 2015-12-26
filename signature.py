@@ -68,6 +68,8 @@ headers = {# GRAPHICS FILES
            'exe': ['4d5a'],
            'java': ['cafebabe'],
            'xml': ['3c3f786d6c'],
+           'html': ['3c21646f63747970652068746d6c3e',
+                    '3c21444f43545950452068746d6c3e'],
            # PINs Password Manager program
            'pins': ['50494e5320342e32300d']}
 
@@ -92,4 +94,6 @@ footers = {# GRAPHICS FILES
            'mp3': ['0000ff',
                    'd13551cc'],
            # ScanSoft PaperPort "Max" files
-           'max': ['000005800000']}
+           'max': ['000005800000'],
+           # MISCELLANEOUS
+           'html': ['3c2f68746d6c3e']}
