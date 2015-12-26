@@ -9,6 +9,8 @@ fixYabinary
 
 change log
 ==========
+| 0.2.9
+| update signatures
 | 0.2.8
 | add many signatures
 | change extract single files to extract many files
