@@ -15,21 +15,21 @@ headers = {# GRAPHICS FILES
            'doc': ['d0cf11e0a1b1'],
            'pst': ['21424ea56fb5a6'],
            'ost': ['2142444e'],
-           # Outlook Express
+           # Outlook express
            'dbx': ['cfad12fec5fd746f'],
            'idx': ['4a4d4639'],
            'mbx': ['4a4d4636'],
            # AOL Mailbox
            'mail': ['414f4c564d'],
            # PGP (PRETTY GOOD PRIVACY)
-           # PGP Disk Files
+           # PGP disk files
            'pgd': ['504750644d41494e6001'],
            # Public Key Ring
            'pgp': ['9900'],
            # Security Ring
            'pgp': ['9501',
                    '9500'],
-           # Encrypted Data or ASCII armored keys
+           # encrypted data or ASCII armored keys
            'pgp': ['a600'],
            # RPM (Linux package format)
            'rpm': ['edab'],
@@ -42,31 +42,32 @@ headers = {# GRAPHICS FILES
            '7zip': ['377abcaf271c'],
            'rar': ['526172211a0700'],
            # SOUND FILES
-           # Real Audio Files
+           # Real audio files
            'ra': ['2e7261fd'],
-           'asf': ['3026B2758E66CF11A6D900AA0062CE6C'],
-           'wmv': ['3026B2758E66CF11A6D900AA0062CE6C'],
+           'asf': ['3026b2758e66cf11a6d900aa0062ce6c'],
+           'wmv': ['3026b2758e66cf11a6d900aa0062ce6c'],
            'wma': ['3026B275',
                    '3026B275'],
            # MPEG Video
            'mpg': ['000001ba',
                    '000001b3'],
            'mp3': ['57415645',
-                   'FFFBD0',
+                   'fffbd0',
                    '494433',
-                   '4C414D45'],
+                   '4c414d45'],
            'mp4': ['6674797033677035',
-                   '667479704D534E56',
-                   '6674797069736F6D'],
+                   '667479704d534e56',
+                   '6674797069736f6d'],
            # WINDOWS REGISTRY FILES
-           'lnk': ['4C0000000114020000000000C00000'],
+           'lnk': ['4c0000000114020000000000c00000'],
            'chm': ['495453460300000060000000010000'],
-           'rdp': ['FFFE730063007200650065006E0020006D'],
+           'rdp': ['fffe730063007200650065006e0020006d'],
            # ScanSoft PaperPort "Max" files
            'max': ['566947466b1a00000000'],
            # MISCELLANEOUS
-           'exe': ['4d5a900003€000000'],
+           'exe': ['4d5a'],
            'java': ['cafebabe'],
+           'xml': ['3c3f786d6c'],
            # PINs Password Manager program
            'pins': ['50494e5320342e32300d']}
 
@@ -86,9 +87,9 @@ footers = {# GRAPHICS FILES
            # MPEG Video
            'mpg': ['000001b9',
                    '000001b7'],
-           'wma': ['000000FF',
-                   '529A1246'],
-           'mp3': ['0000FF',
-                   'D13551CC'],
+           'wma': ['000000ff',
+                   '529a1246'],
+           'mp3': ['0000ff',
+                   'd13551cc'],
            # ScanSoft PaperPort "Max" files
-           'max': ['000005800000 ']}
+           'max': ['000005800000']}
