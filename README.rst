@@ -11,6 +11,7 @@ change log
 ==========
 | 0.2.9
 | update signatures
+| add check_hidden_data()
 | 0.2.8
 | add many signatures
 | change extract single files to extract many files
