@@ -197,12 +197,17 @@ def identify(source_path):
     """
     identify file type in file
     """
-    hex_data = get(source_path)
+    binary_string = get(source_path)
 
     print(source_path + " include following FILE SIGNATURES")
 
-    footer_result = get_signature_index(hex_data, footers)
-    for file_type, header_indexies in get_signature_index(hex_data, headers).items():
+    footer_result = get_signature_index(binary_string, footers)
+    header_result = get_signature_index(binary_string, headers)
+
+    if check_hidden_data(binary_string, header_result, footer_result):
+        print('This file include hidden file.')
+
+    for file_type, header_indexies in header_result.items():
         print('File type: '+file_type+' Detect: '+str(len(header_indexies))+' files')
         print('HEADER')
         result = ''
@@ -289,7 +294,7 @@ def _check_footer_index(binary_length, footer_index):
 def check_hidden_data(binary_string, header_index, footer_index):
     binary_length = len(binary_string)
 
-    if _check_header_index(binary_length, header_index) and _check_footer_index(binary_length, footer_index):
+    if _check_header_index(binary_length, header_index) or _check_footer_index(binary_length, footer_index):
         return True
     else:
         return False
