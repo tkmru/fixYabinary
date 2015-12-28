@@ -13,7 +13,7 @@ Released under MIT License.
 __description__ = "Tool to Fix Yabinary File"
 __author__ = "@tkmru"
 __version__ = "0.2.9"
-__date__ = "2015/12/26"
+__date__ = "2015/12/29"
 __minimum_python_version__ = (2, 7, 11)
 __maximum_python_version__ = (3, 5, 1)
 __copyright__ = "Copyright (c) @tkmru"
