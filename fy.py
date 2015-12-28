@@ -268,6 +268,33 @@ def get_signature_index(binary_string, signatures_dict):
     return result # return value: {file type:[[begin index, end index], [begin index, end index]]}
 
 
+def _check_header_index(binary_length, header_index):
+    for file_type, indexies in header_index.items():
+        for i in indexies:
+            if i[0] != 0:
+                return True
+
+    return False
+
+
+def _check_footer_index(binary_length, footer_index):
+    for file_type, indexies in footer_index.items():
+        for i in indexies:
+            if i[1] != binary_length:
+                return True
+
+    return False
+
+
+def check_hidden_data(binary_string, header_index, footer_index):
+    binary_length = len(binary_string)
+
+    if _check_header_index(binary_length, header_index) and _check_footer_index(binary_length, footer_index):
+        return True
+    else:
+        return False
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(__description__)
     parser.add_argument('-l', '--look', nargs=1, metavar='source_path', help='look binary like hexdump command.')
