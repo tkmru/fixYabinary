@@ -319,32 +319,37 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--look', nargs=1, metavar='source_path', help='look binary like hexdump command.')
     parser.add_argument('-i', '--identify', nargs=1, metavar='source_path', help='identify file type in file.')
     parser.add_argument('-e', '--extend', nargs=4, metavar=('source_path', 'dest_path', 'hex', bytes), help='make new file that file is extended.')
-    parser.add_argument('-x', '--extract', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='extract file in file.')
-    parser.add_argument('-a', '--auto_extract', nargs='*', metavar=('source_path', 'dest_path'), help='auto extract file in file.')
+    parser.add_argument('-c', '--cut', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='cut out file from file.')
+    parser.add_argument('-x', '--extract', nargs='*', metavar=('source_path', 'dest_path'), help='auto extract file in file.')
     parser.add_argument('-v', '--version', action='version', version=__version__)
 
     args = parser.parse_args()
 
     if args.look:
         look(args.look[0])
+
     elif args.identify:
         identify(args.identify[0])
+
     elif args.extend:
         extend(args.extend[0], args.extend[1], args.extend[2], args.extend[3], args.extend[4], args.extend[5])
+
+    elif args.cut:
+        created_file = extract(args.cut[0], args.cut[1], args.cut[2], args.cut[3])
+        path = created_file.values()[0][0]
+        print('Succeeded in making {0}').format(path)
+
+    elif len(args.extract) == 1:
+        created_file = extract(args.extract[0], './result')
+        for file_type, path_list in created_file.items():
+            for path in path_list:
+                print('Succeeded in making {0}').format(path)
+
     elif args.extract:
-        created_file = extract(args.extract[0], args.extract[1], args.extract[2], args.extract[3])
+        created_file = extract(args.extract[0], args.extract[1])
         for file_type, path_list in created_file.items():
             for path in path_list:
                 print('Succeeded in making {0}').format(path)
-
-    elif len(args.auto_extract) == 1:
-        created_file = extract(args.auto_extract[0], './result')
-        for file_type, path_list in created_file.items():
-            for path in path_list:
-                print('Succeeded in making {0}').format(path)
-
-    elif args.auto_extract:
-        extract(args.auto_extract[0], args.auto_extract[1])
 
     # for debug
     # identify('./expanded')
