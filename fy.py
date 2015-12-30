@@ -127,7 +127,6 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
 
         extract_files[None] = [dest_path]
         return extract_files
-        # print('Succeeded in making '+dest_path)
 
     elif (start_address is None) and (end_address is None):
         '''
@@ -201,7 +200,6 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
             write(dest_path, "".join(hex_list))
 
             extract_files[None] = [dest_path]
-            #print('Succeeded in making {0}'.format(dest_path))
 
         return extract_files
 
@@ -334,9 +332,17 @@ if __name__ == "__main__":
     elif args.extend:
         extend(args.extend[0], args.extend[1], args.extend[2], args.extend[3], args.extend[4], args.extend[5])
     elif args.extract:
-        extract(args.extract[0], args.extract[1], args.extract[2], args.extract[3])
+        created_file = extract(args.extract[0], args.extract[1], args.extract[2], args.extract[3])
+        for file_type, path_list in created_file.items():
+            for path in path_list:
+                print('Succeeded in making {0}').format(path)
+
     elif len(args.auto_extract) == 1:
-        extract(args.auto_extract[0], './result')
+        created_file = extract(args.auto_extract[0], './result')
+        for file_type, path_list in created_file.items():
+            for path in path_list:
+                print('Succeeded in making {0}').format(path)
+
     elif args.auto_extract:
         extract(args.auto_extract[0], args.auto_extract[1])
 
