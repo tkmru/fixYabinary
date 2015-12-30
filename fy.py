@@ -24,6 +24,7 @@ import re
 import binascii
 import sys
 import argparse
+import collections
 from signature import headers
 from signature import footers
 
@@ -108,7 +109,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
     extract file in file. cut out file or auto detect file in file.
     '''
 
-    extract_files = {}
+    extract_files = collections.OrderedDict()
 
     if (start_address is not None) and (end_address is not None):
         """
@@ -139,6 +140,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
             '''
             use header smallest address
             '''
+            file_count = 1
             header_infomation = get_signature_index(hex_data, headers).items()
             for file_type, header_indexies in header_infomation:
                 footer_indexies = []
@@ -154,7 +156,8 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     if len(footer_indexies) != 0:
                         min_footer_index = min(footer_indexies)
                         extract_data = hex_data[header_index[0]: header_index[1]] + hex_data[header_index[1]:][:min_footer_index]
-                        final_dest_path = dest_path+str(i+1)+'.'+file_type
+                        final_dest_path = dest_path+str(file_count)+'.'+file_type
+                        file_count += 1
 
                     else: # if footer is None
                         near_header_indexies = []
@@ -165,7 +168,8 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
 
                         if len(near_header_indexies) != 0: # extract data from header to next header
                             extract_data = hex_data[header_index[0]: min(near_header_indexies)+1]
-                            final_dest_path = dest_path+str(i+1)+'.'+file_type
+                            final_dest_path = dest_path+str(file_count)+'.'+file_type
+                            file_count += 1
 
                     write(final_dest_path, extract_data)
                     extract_files[file_type].append(final_dest_path)
@@ -319,7 +323,7 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--extend', nargs=4, metavar=('source_path', 'dest_path', 'hex', bytes), help='make new file that file is extended.')
     parser.add_argument('-r', '--extract', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='extract file in file.')
     parser.add_argument('-a', '--auto_extract', nargs='*', metavar=('source_path', 'dest_path'), help='auto extract file in file.')
-    parser.add_argument('--version', '-v', action='version', version=__version__)
+    parser.add_argument('-v', '--version', action='version', version=__version__)
 
     args = parser.parse_args()
 
