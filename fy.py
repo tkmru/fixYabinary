@@ -108,6 +108,8 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
     extract file in file. cut out file or auto detect file in file.
     '''
 
+    extract_files = {}
+
     if (start_address is not None) and (end_address is not None):
         """
         cut out file
@@ -121,7 +123,10 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
             end_address = int(end_address, 16)
 
         write(dest_path, hex_data[start_address*2: end_address*2+2])
-        print('Succeeded in making '+dest_path)
+
+        extract_files[None] = [dest_path]
+        return extract_files
+        # print('Succeeded in making '+dest_path)
 
     elif (start_address is None) and (end_address is None):
         '''
@@ -137,6 +142,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
             header_infomation = get_signature_index(hex_data, headers).items()
             for file_type, header_indexies in header_infomation:
                 footer_indexies = []
+                extract_files[file_type] = []
                 for i, header_index in enumerate(header_indexies):
                     footer_indexies = []
                     for signature in footers[file_type]:
@@ -148,8 +154,7 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                     if len(footer_indexies) != 0:
                         min_footer_index = min(footer_indexies)
                         extract_data = hex_data[header_index[0]: header_index[1]] + hex_data[header_index[1]:][:min_footer_index]
-                        write(dest_path+str(i+1)+'.'+file_type, extract_data)
-                        print('Succeeded in making {0}.{1}'.format(dest_path+str(i+1), file_type))
+                        final_dest_path = dest_path+str(i+1)+'.'+file_type
 
                     else: # if footer is None
                         near_header_indexies = []
@@ -159,8 +164,11 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                                     near_header_indexies.append(header_index[1])
 
                         if len(near_header_indexies) != 0: # extract data from header to next header
-                            write(dest_path+str(i+1)+'.'+file_type, hex_data[header_index[0]: min(near_header_indexies)+1])
-                            print('Succeeded in making {0}.{1}'.format(dest_path+str(i+1), file_type))
+                            extract_data = hex_data[header_index[0]: min(near_header_indexies)+1]
+                            final_dest_path = dest_path+str(i+1)+'.'+file_type
+
+                    write(final_dest_path, extract_data)
+                    extract_files[file_type].append(final_dest_path)
 
         else: # when Yabinary don't have header and footer.
             '''
@@ -187,7 +195,11 @@ def extract(source_path, dest_path, start_address=None, end_address=None):
                         break
 
             write(dest_path, "".join(hex_list))
-            print('Succeeded in making {0}'.format(dest_path))
+
+            extract_files[None] = [dest_path]
+            #print('Succeeded in making {0}'.format(dest_path))
+
+        return extract_files
 
     else:
         raise Exception("Both third and fourth args must be None or address.")
