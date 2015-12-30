@@ -319,7 +319,7 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--look', nargs=1, metavar='source_path', help='look binary like hexdump command.')
     parser.add_argument('-i', '--identify', nargs=1, metavar='source_path', help='identify file type in file.')
     parser.add_argument('-e', '--extend', nargs=4, metavar=('source_path', 'dest_path', 'hex', bytes), help='make new file that file is extended.')
-    parser.add_argument('-r', '--extract', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='extract file in file.')
+    parser.add_argument('-x', '--extract', nargs=4, metavar=('source_path', 'dest_path', 'start_address', 'end_address'), help='extract file in file.')
     parser.add_argument('-a', '--auto_extract', nargs='*', metavar=('source_path', 'dest_path'), help='auto extract file in file.')
     parser.add_argument('-v', '--version', action='version', version=__version__)
 
