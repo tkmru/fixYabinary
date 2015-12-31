@@ -343,13 +343,13 @@ if __name__ == "__main__":
         created_file = extract(args.extract[0], './result')
         for file_type, path_list in created_file.items():
             for path in path_list:
-                print('Succeeded in making {0}').format(path)
+                print('Succeeded in making {0}'.format(path))
 
     elif args.extract:
         created_file = extract(args.extract[0], args.extract[1])
         for file_type, path_list in created_file.items():
             for path in path_list:
-                print('Succeeded in making {0}').format(path)
+                print('Succeeded in making {0}'.format(path))
 
     # for debug
     # identify('./expanded')
