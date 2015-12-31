@@ -5,7 +5,6 @@ fixYabinary
 | This is Python Library to fix "Yabinary" file like foremost. 
  The term "Yabinary" in Japanese mean "Dangerous Binary". 
 | This library can be useful for CTF. It supports Python 2 & 3. 
-| docment in Japanese(http://tkmr.hatenablog.com/entry/2014/03/25/222207) 
 
 change log
 ==========
@@ -189,14 +188,19 @@ It can be used in command line.
 extract(file_path, new_file_path, start_address, end_address)
 -------------------------------------------------------------
 
-| cut out binary data, and write it into new file.
+| cut out binary data, and write it into new file. Return value is result file path OrderdDict.
+
+::
+
+    OrderedDict([('file_type', ['result_file_path1', 'result_file_path2']), ('file_type2', ['result_file_path3'])])
+
 | If start_address and end_address is str, they are interpreted hex.
 | If start_address and end_address is int, they are interpreted decimal.
 
 ::
 
     >> import fy
-    >> fy.extract("./extended", "./result", 4 , 124)
+    >> fy.extract('./extended', './result', 4 , 124)
     OrderedDict([(None, ['./cutout'])])
 
 and auto detect file in file, and write it into new file.
@@ -204,7 +208,7 @@ and auto detect file in file, and write it into new file.
 ::
 
     >> import fy
-    >> fy.extract("./extended", "./result")
+    >> fy.extract('./extended', './result')
     OrderedDict([('png', ['result1.png', 'result2.png', 'result3.png', 'result4.png']), ('gif', ['result5.gif', 'result6.gif', 'result7.gif', 'result8.gif']), ('jpg', ['result9.jpg', 'result10.jpg', 'result11.jpg', 'result12.jpg'])])
 
 It can be used in command line.
@@ -217,6 +221,43 @@ It can be used in command line.
 
     $ fy -x extended               # if new_file_path is None, auto set ./result to new_file_path
 
+
+---------------------------------------------------
+get_signature_index(binary_string, signatures_dict)
+---------------------------------------------------
+
+| get file signature index in file. signature is fy.headers, fy.footers
+| Retun value is signture index dict.
+
+::
+
+    {file type:[[begin index, end index], [begin index, end index]]}
+
+
+| example
+
+::
+
+    >> fy.headers
+    {'pgd': ['504750644d41494e6001'], 'html': ['3c21646f63747970652068746d6c3e', '3c21444f43545950452068746d6c3e'], 'java': ['cafebabe'], 'pdf': ['25504446'], 'pins': ['50494e5320342e32300d']...
+    >> fy.get_signature_index(fy.get('extended'), fy.headers)
+    {'gif': [[0, 11], [5582972, 5582983], [11156962, 11156973], [16732150, 16732161]], 'jpg': [[19454, 19459], [5592434, 5592439], [11166756, 11166761], [16743864, 16743869]]}
+
+
+------------------------------------------------------------
+check_hidden_data(binary_string, header_index, footer_index)
+------------------------------------------------------------
+| check hidden data in file. It return truth value.
+| If file include hidden file, it return True.
+| If file doesn't include hidden file, it return False.
+
+::
+
+    >> binary = fy.get('MrFusion.gpjb')
+    >> header_index = fy.get_signature_index(binary, fy.headers)
+    >> footer_index = fy.get_signature_index(binary, fy.footers)
+    >> fy.check_hidden_data(binary, header_index, footer_index)
+    True
 
 License
 =======
