@@ -9,6 +9,9 @@ fixYabinary
 
 change log
 ==========
+| 0.3.0
+| extract() return dict
+| change -x to -c, -a to -x
 | 0.2.9
 | update signatures
 | add check_hidden_data()
@@ -160,13 +163,18 @@ identify file type in file. return file type.
     >> import fy
     >> fy.identify("./extended")
     ./expanded include following FILE SIGNATURES
+    This file include hidden file.
+    File type: gif Detect: 4 files
     HEADER
-    pdf: 10 bytes - 13 bytes
-    jpg: 131076 bytes - 131078 bytes, 152310 bytes - 152312 bytes, 1352263 bytes - 1352265 bytes
-
+    0 bytes - 5 bytes, 2791486 bytes - 2791491 bytes, 5578481 bytes - 5578486 bytes, 8366075 bytes - 8366080 bytes
     FOOTER
-    pdf: 2340568 bytes - 2340573 bytes, 2340568 bytes - 2340574 bytes
-    jpg: 32981 bytes - 32982 bytes, 79754 bytes - 79755 bytes
+    6941 bytes - 6942 bytes, 2793128 bytes - 2793129 bytes, 2794238 bytes - 2794239 bytes, 5580894 bytes - 5580895 bytes, 8368828 bytes - 8368829 bytes
+
+    File type: png Detect: 4 files
+    HEADER
+    6943 bytes - 6958 bytes, 2794240 bytes - 2794255 bytes, 5580896 bytes - 5580911 bytes, 8368830 bytes - 8368845 bytes
+    FOOTER
+    9715 bytes - 9726 bytes, 2796205 bytes - 2796216 bytes, 5583366 bytes - 5583377 bytes, 8371920 bytes - 8371931 bytes
 
 
 It can be used in command line.
@@ -188,7 +196,7 @@ extract(file_path, new_file_path, start_address, end_address)
 
     >> import fy
     >> fy.extract("./extended", "./result", 4 , 124)
-    Succeeded in making ./result
+    OrderedDict([(None, ['./cutout'])])
 
 and auto detect file in file, and write it into new file.
 
@@ -196,19 +204,17 @@ and auto detect file in file, and write it into new file.
 
     >> import fy
     >> fy.extract("./extended", "./result")
-    Succeeded in making ./result1.png
-    Succeeded in making ./result2.png
-    Succeeded in making ./result2.jpg
+    OrderedDict([('png', ['result1.png', 'result2.png', 'result3.png', 'result4.png']), ('gif', ['result5.gif', 'result6.gif', 'result7.gif', 'result8.gif']), ('jpg', ['result9.jpg', 'result10.jpg', 'result11.jpg', 'result12.jpg'])])
 
 It can be used in command line.
 
 ::
 
-    $ fy -r extended result 4 124  # set start_address and end_address
+    $ fy -c extended result 4 124  # set start_address and end_address
 
-    $ fy -a extended result        # auto extract file in file
+    $ fy -x extended result        # auto extract file in file
 
-    $ fy -a extended               # if new_file_path is None, auto set ./result to new_file_path
+    $ fy -x extended               # if new_file_path is None, auto set ./result to new_file_path
 
 
 License
