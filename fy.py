@@ -336,8 +336,8 @@ if __name__ == "__main__":
 
     elif args.cut:
         created_file = extract(args.cut[0], args.cut[1], args.cut[2], args.cut[3])
-        path = created_file.values()[0][0]
-        print('Succeeded in making {0}').format(path)
+        path = list(created_file.values())[0][0]
+        print('Succeeded in making {0}'.format(path))
 
     elif len(args.extract) == 1:
         created_file = extract(args.extract[0], './result')
