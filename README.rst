@@ -10,6 +10,7 @@ fixYabinary
 change log
 ==========
 | 0.3.0
+| fix bug
 | extract() return dict
 | change -x to -c, -a to -x
 | 0.2.9

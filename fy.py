@@ -227,9 +227,9 @@ def identify(source_path):
         result = ''
         for i, location in enumerate(header_indexies):
             if i == (len(header_indexies)-1):
-                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
+                result += str(location[0]//2) + ' bytes - ' + str((location[1]-1)//2) + ' bytes'
             else:
-                result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
+                result += str(location[0]//2) + ' bytes - ' + str((location[1]-1)//2) + ' bytes, '
         print(result)
 
         print('FOOTER')
@@ -238,9 +238,9 @@ def identify(source_path):
             footer_indexies = footer_result[file_type]
             for i, location in enumerate(footer_indexies):
                 if i == (len(footer_indexies)-1):
-                    result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes'
+                    result += str(location[0]//2) + ' bytes - ' + str((location[1]-1)//2) + ' bytes'
                 else:
-                    result += str(location[0]/2) + ' bytes - ' + str((location[1]-1)/2) + ' bytes, '
+                    result += str(location[0]//2) + ' bytes - ' + str((location[1]-1)//2) + ' bytes, '
         print(result+'\n')
 
 
